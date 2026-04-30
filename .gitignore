@@ -18,7 +18,8 @@ node_modules/
 _site/
 .cache/
 
-# Cloudflare Workers (OAuth proxy — added in step 4)
-workers/.wrangler/
-workers/node_modules/
+# Cloudflare Pages Functions / Wrangler
+.wrangler/
+.dev.vars
+
 
