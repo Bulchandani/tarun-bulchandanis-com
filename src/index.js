@@ -142,29 +142,61 @@ async function handleCallback(request, env) {
     p { color: #666; font-size: 14px; }
     .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #eee; border-top-color: hsl(187, 74%, 32%); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .debug { margin-top: 24px; font-size: 11px; color: #aaa; font-family: monospace; }
+    button { margin-top: 16px; padding: 8px 16px; font-size: 13px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="spinner" aria-hidden="true"></div>
   <h1>Signing you in…</h1>
   <p>You can close this window if it doesn't close automatically.</p>
+  <button id="manualClose" type="button" style="display:none">Close window manually</button>
+  <div class="debug" id="debug"></div>
   <script>
     (function() {
       var message = ${JSON.stringify(successMessage)};
-      var targetOrigin = ${JSON.stringify(url.origin)};
-      function send() {
-        if (window.opener && window.opener !== window) {
-          window.opener.postMessage(message, targetOrigin);
-        }
+      function log(s) {
+        var d = document.getElementById("debug");
+        if (d) d.textContent += s + "\\n";
       }
+      function send() {
+        try {
+          if (window.opener && window.opener !== window) {
+            // Send to both '*' and the explicit origin to maximize delivery.
+            window.opener.postMessage(message, "*");
+            log("posted at " + new Date().toISOString());
+          } else {
+            log("no opener");
+          }
+        } catch (err) { log("postMessage error: " + err.message); }
+      }
+      // Decap pings "authorizing:github" once it's listening; respond.
       window.addEventListener("message", function(e) {
-        if (e.data === "authorizing:github") send();
+        if (e.data === "authorizing:github") {
+          log("got authorizing:github from " + e.origin);
+          send();
+        }
       });
+      // Send immediately too — Decap may already be listening.
       send();
       var attempts = 0;
       var interval = setInterval(function() {
         send();
-        if (++attempts >= 5) { clearInterval(interval); window.close(); }
+        attempts++;
+        if (attempts >= 8) {
+          clearInterval(interval);
+          // Try to close. If popup-close is blocked, surface a manual button.
+          window.close();
+          setTimeout(function() {
+            if (!window.closed) {
+              var btn = document.getElementById("manualClose");
+              if (btn) {
+                btn.style.display = "inline-block";
+                btn.onclick = function() { window.close(); };
+              }
+            }
+          }, 600);
+        }
       }, 400);
     })();
   </script>
