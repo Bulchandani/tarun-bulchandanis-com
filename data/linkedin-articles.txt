@@ -1,0 +1,16 @@
+# LinkedIn articles to import as blog posts.
+#
+# Add one URL per line. Lines starting with # and blank lines are ignored.
+# Re-running the import is safe — URLs that already have a post are skipped.
+#
+# To bulk-import everything in this file:
+#   npm run add-linkedin -- --from-file data/linkedin-articles.txt
+#
+# After it runs:
+#   git add blog/posts/
+#   git commit -m "Add LinkedIn posts"
+#   git push
+#
+# Examples (uncomment and replace with your real article URLs):
+# https://www.linkedin.com/pulse/architecture-debt-tarun-bulchandani-abc123
+# https://www.linkedin.com/pulse/ai-in-regulated-industries-tarun-bulchandani-def456
