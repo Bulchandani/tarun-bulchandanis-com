@@ -165,8 +165,20 @@ async function processOne(url) {
   const title = meta(html, "og:title") || "Untitled";
   const description = meta(html, "og:description") || "";
   const image = meta(html, "og:image") || "";
-  const publishedRaw =
-    meta(html, "article:published_time") || meta(html, "datePublished") || "";
+
+  // Date extraction is layered. LinkedIn doesn't expose article:published_time
+  // in OG tags, so we try in order:
+  //   1. JSON-LD "datePublished" (most reliable, matches what LinkedIn shows)
+  //   2. og:article:published_time (rare on LinkedIn but standard elsewhere)
+  //   3. The timestamp embedded in the og:image URL (LinkedIn article-cover
+  //      images contain the upload epoch ms in /0/<timestamp>?)
+  //   4. Today's date (fallback)
+  let publishedRaw =
+    extractJsonLdDate(html) ||
+    meta(html, "article:published_time") ||
+    meta(html, "datePublished") ||
+    extractDateFromImageUrl(image) ||
+    "";
 
   let date;
   if (publishedRaw) {
@@ -232,6 +244,29 @@ function meta(html, key) {
     if (m) return decodeHtmlEntities(m[1].trim());
   }
   return null;
+}
+
+// Pull the first datePublished value out of any JSON-LD <script> on the page.
+// LinkedIn embeds article schema like:
+//   "datePublished":"2023-05-05T00:19:02.000+00:00"
+function extractJsonLdDate(html) {
+  // Look across the entire page (not just inside <script type="application/ld+json">)
+  // because LinkedIn duplicates it in several places.
+  const m = html.match(/"datePublished"\s*:\s*"([^"]+)"/);
+  return m ? m[1] : null;
+}
+
+// LinkedIn article cover images embed the upload timestamp in the URL:
+//   .../article-cover_image-shrink_720_1280/0/1683245726457?...
+// That epoch ms is a close proxy for when the article was published.
+function extractDateFromImageUrl(imageUrl) {
+  if (!imageUrl) return null;
+  const m = imageUrl.match(/\/0\/(\d{10,13})\?/);
+  if (!m) return null;
+  const raw = m[1];
+  const ms = raw.length === 13 ? parseInt(raw, 10) : parseInt(raw, 10) * 1000;
+  const d = new Date(ms);
+  return isNaN(d) ? null : d.toISOString();
 }
 
 function decodeHtmlEntities(s) {

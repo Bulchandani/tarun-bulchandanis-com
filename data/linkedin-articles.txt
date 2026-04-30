@@ -10,7 +10,16 @@
 #   git add blog/posts/
 #   git commit -m "Add LinkedIn posts"
 #   git push
-#
-# Examples (uncomment and replace with your real article URLs):
-# https://www.linkedin.com/pulse/architecture-debt-tarun-bulchandani-abc123
-# https://www.linkedin.com/pulse/ai-in-regulated-industries-tarun-bulchandani-def456
+
+https://www.linkedin.com/pulse/intersection-enterprise-architecture-ai-guide-tarun-bulchandani
+https://www.linkedin.com/pulse/introduction-enterprise-architecture-governance-tarun-bulchandani
+https://www.linkedin.com/pulse/establishing-enterprise-architecture-governance-tarun-bulchandani
+https://www.linkedin.com/pulse/defining-enforcing-standards-enterprise-architecture-bulchandani
+https://www.linkedin.com/pulse/developing-maintaining-enterprise-architecture-tarun-bulchandani
+https://www.linkedin.com/pulse/monitoring-measuring-effectiveness-enterprise-tarun-bulchandani
+https://www.linkedin.com/pulse/maximising-benefits-cots-solutions-brief-guide-tarun-bulchandani
+https://www.linkedin.com/pulse/maximising-value-cots-solutions-insights-enterprise-tarun-bulchandani
+https://www.linkedin.com/pulse/optimizing-governance-strategies-effective-tarun-bulchandani
+https://www.linkedin.com/pulse/magnitude-upside-ai-implications-organizations-humans-bulchandani
+https://www.linkedin.com/pulse/evolution-enterprise-architecture-embracing-ai-technodynamic-7xfhe
+https://www.linkedin.com/pulse/how-enterprise-architecture-can-help-achieve-first-un-bulchandani
