@@ -56,7 +56,8 @@ if (args[0] === "--from-file" || args[0] === "-f") {
   urls = args;
 }
 
-// Validate all URLs look like LinkedIn
+// Validate all URLs look like LinkedIn, then normalize them (strip query
+// strings, fragments, trailing slashes — all noise that breaks dedup).
 const linkedinRe = /^https?:\/\/(www\.)?linkedin\.com\//i;
 const invalid = urls.filter((u) => !linkedinRe.test(u));
 if (invalid.length > 0) {
@@ -64,6 +65,8 @@ if (invalid.length > 0) {
   invalid.forEach((u) => console.error("  " + u));
   process.exit(1);
 }
+
+urls = urls.map(normalizeUrl);
 
 if (urls.length === 0) {
   console.error("Error: no URLs found.\n");
@@ -292,6 +295,22 @@ function slugify(s) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
+}
+
+// Normalize a LinkedIn URL: strip query string, fragment, and trailing slash.
+// Different shares of the same article often have different ?trackingId=…
+// query params; stripping them gives us a canonical form for dedup.
+function normalizeUrl(url) {
+  try {
+    const u = new URL(url);
+    u.search = "";
+    u.hash = "";
+    let str = u.toString();
+    if (str.endsWith("/")) str = str.slice(0, -1);
+    return str;
+  } catch (e) {
+    return url;
+  }
 }
 
 function escapeForYaml(s) {

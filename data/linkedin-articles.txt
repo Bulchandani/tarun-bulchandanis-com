@@ -3,14 +3,12 @@
 # Add one URL per line. Lines starting with # and blank lines are ignored.
 # Re-running the import is safe — URLs that already have a post are skipped.
 #
+# Query strings (?trackingId=...) and trailing slashes are stripped automatically.
+#
 # To bulk-import everything in this file:
 #   npm run add-linkedin -- --from-file data/linkedin-articles.txt
-#
-# After it runs:
-#   git add blog/posts/
-#   git commit -m "Add LinkedIn posts"
-#   git push
 
+# === Original 12 (May 2023 → Jan 2024) ===
 https://www.linkedin.com/pulse/intersection-enterprise-architecture-ai-guide-tarun-bulchandani
 https://www.linkedin.com/pulse/introduction-enterprise-architecture-governance-tarun-bulchandani
 https://www.linkedin.com/pulse/establishing-enterprise-architecture-governance-tarun-bulchandani
@@ -23,3 +21,18 @@ https://www.linkedin.com/pulse/optimizing-governance-strategies-effective-tarun-
 https://www.linkedin.com/pulse/magnitude-upside-ai-implications-organizations-humans-bulchandani
 https://www.linkedin.com/pulse/evolution-enterprise-architecture-embracing-ai-technodynamic-7xfhe
 https://www.linkedin.com/pulse/how-enterprise-architecture-can-help-achieve-first-un-bulchandani
+
+# === Additional ones added 2026-04-30 ===
+https://www.linkedin.com/pulse/you-can-build-ai-fix-too-here-proof-tarun-bulchandani-3qoue
+https://www.linkedin.com/pulse/openclaw-too-good-ignore-risky-install-changed-how-tarun-bulchandani-utble
+https://www.linkedin.com/pulse/determinism-ai-workflows-weve-come-long-way-tarun-bulchandani-uvz7e
+https://www.linkedin.com/pulse/hidden-danger-tech-homogeneity-lessons-from-recent-gone-bulchandani-vjaof
+https://www.linkedin.com/pulse/from-offshore-onshore-leveraging-transformations-tarun-bulchandani-oovhf
+https://www.linkedin.com/pulse/transformative-power-reverse-mentoring-strategic-tarun-bulchandani-nh4jf
+https://www.linkedin.com/pulse/concept-effective-altruism-role-enterprise-architects-bulchandani-w897e
+https://www.linkedin.com/pulse/digital-transformation-roadmap-integrating-strategy-tarun-bulchandani
+https://www.linkedin.com/pulse/implementing-agile-strategies-embracing-change-tarun-bulchandani
+https://www.linkedin.com/pulse/creating-effective-process-application-review-tarun-bulchandani
+https://www.linkedin.com/pulse/creating-resilient-infrastructure-strategies-business-bulchandani
+https://www.linkedin.com/pulse/building-sustainable-competitive-advantage-how-build-bulchandani
+https://www.linkedin.com/pulse/creating-sustainable-competitive-advantage-through-tarun-bulchandani
