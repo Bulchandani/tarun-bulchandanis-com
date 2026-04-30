@@ -8,6 +8,7 @@
     "dev": "eleventy --serve --port=8080",
     "deploy": "npm run build && wrangler deploy",
     "preview": "npm run build && wrangler dev",
+    "new-post": "node scripts/new-post.mjs",
     "add-linkedin": "node scripts/add-linkedin.mjs"
   },
   "devDependencies": {

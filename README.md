@@ -1,93 +1,236 @@
 # tarun.bulchandanis.com
 
-Personal portfolio for Tarun Bulchandani. **Pure static site** — vanilla HTML / CSS / JS, single file, no build step, no backend. Hosts cleanly on GitHub Pages, Cloudflare Pages, Netlify, or any static host.
+Personal portfolio + blog for Tarun Bulchandani.
 
-## Structure
+- **Homepage** at `/` — hand-coded HTML/CSS/JS in `index.html`. No framework.
+- **Blog** at `/blog/` — markdown files compiled to HTML by [Eleventy](https://www.11ty.dev/).
+- **CMS** (planned) at `/studio/` — [Decap CMS](https://decapcms.org/) editor authenticated against GitHub via OAuth.
+- **Hosting** — Cloudflare Worker with static assets binding. The Worker also handles the OAuth flow for Decap (`/auth`, `/oauth/callback`).
+
+## Setup on a fresh machine
+
+```bash
+# 1. Clone
+gh repo clone Bulchandani/tarun-bulchandanis-com
+cd tarun-bulchandanis-com
+
+# 2. Install dependencies (Node 20+ recommended)
+npm install
+
+# 3. Build the site
+npm run build
+# → output goes to _site/, deployed to Cloudflare on git push
+```
+
+That's it. Everything else (writing posts, deploying) flows through git commits.
+
+## Writing posts
+
+Two kinds: **your own writing** (lives in this repo), or **LinkedIn articles** (link out to LinkedIn, hosted there).
+
+### Your own writing
+
+```bash
+npm run new-post -- "Architecture under uncertainty"
+```
+
+Creates `blog/posts/YYYY-MM-DD-architecture-under-uncertainty.md` with frontmatter pre-filled. Open it, write your post, then:
+
+```bash
+git add blog/posts/
+git commit -m "Post: Architecture under uncertainty"
+git push
+```
+
+Cloudflare rebuilds in ~30s and the post is live.
+
+If you want to draft a post without publishing it yet, add `--draft`:
+
+```bash
+npm run new-post -- "Half-finished idea" --draft
+```
+
+Drafts get `draft: true` in their frontmatter and the blog index filters them out. Remove that line when you're ready to publish.
+
+### LinkedIn articles
+
+Single article:
+
+```bash
+npm run add-linkedin -- https://www.linkedin.com/pulse/your-article-slug
+```
+
+Multiple at once:
+
+```bash
+npm run add-linkedin -- \
+  https://www.linkedin.com/pulse/article-1 \
+  https://www.linkedin.com/pulse/article-2
+```
+
+Bulk from a file (the canonical list of imported articles lives at `data/linkedin-articles.txt`):
+
+```bash
+# Add new URL(s) to data/linkedin-articles.txt, then:
+npm run add-linkedin -- --from-file data/linkedin-articles.txt
+```
+
+The script:
+
+- Fetches each LinkedIn URL
+- Pulls title, excerpt, hero image, and **published date** (from JSON-LD or the og:image timestamp — LinkedIn doesn't expose `article:published_time` in OG tags)
+- Writes a markdown file under `blog/posts/{published-date}-linkedin-{slug}.md`
+- Marks the post with `source: linkedin` so the blog index renders it as an outbound link to LinkedIn (we don't host LinkedIn's article body)
+- Skips URLs that already have a post (re-running is safe)
+
+Then:
+
+```bash
+git add blog/posts/ data/linkedin-articles.txt
+git commit -m "Add LinkedIn posts"
+git push
+```
+
+## Local development
+
+```bash
+# Serve the blog locally with hot reload
+npm run dev
+# → http://localhost:8080
+# Visit http://localhost:8080/blog/ for the blog index
+```
+
+If you want to test the Cloudflare Worker (OAuth handlers) locally too:
+
+```bash
+# Build first
+npm run build
+
+# Then run with wrangler (the Worker proxy)
+npm run preview
+# → http://localhost:8787
+```
+
+`npm run preview` requires `.dev.vars` in the repo root with the OAuth secrets:
 
 ```
-tarun-site/
-├── index.html              Single-page site (HTML + embedded CSS + JS)
+GITHUB_OAUTH_CLIENT_ID=Ov23liynJm8y4YMMCpoy
+GITHUB_OAUTH_CLIENT_SECRET=<paste-from-password-manager>
+```
+
+`.dev.vars` is gitignored — never commit it.
+
+## Deploy
+
+Deploys are automatic on every push to `main`:
+
+1. Push to GitHub
+2. Cloudflare's GitHub integration runs `npm install && wrangler deploy`
+3. The `build.command` in `wrangler.jsonc` triggers `npm run build` first
+4. Wrangler bundles `src/index.js` (the Worker) and uploads `_site/` (the static assets)
+5. Live in ~60s at `https://tarun.bulchandanis.com`
+
+To deploy manually from the command line:
+
+```bash
+npx wrangler login   # one-time, opens browser
+npm run deploy       # build + deploy
+```
+
+## Architecture
+
+```
+Request to tarun.bulchandanis.com
+   │
+   ▼
+src/index.js (Cloudflare Worker)
+   │
+   ├── /auth             → redirects to GitHub OAuth
+   ├── /oauth/callback   → exchanges code for token, returns to Decap
+   └── (everything else) → env.ASSETS.fetch() → _site/
+                                                  │
+                                                  ├── index.html        (homepage, hand-coded)
+                                                  ├── blog/index.html   (built by 11ty)
+                                                  ├── blog/{slug}/      (each post)
+                                                  └── assets/, downloads/
+```
+
+Build pipeline:
+
+```
+git push origin main
+   │
+   ▼
+Cloudflare's GitHub integration
+   │
+   ▼
+npm install
+   │
+   ▼
+npm run build       (Eleventy → _site/)
+   │
+   ▼
+wrangler deploy     (uploads src/index.js + _site/)
+```
+
+## File map
+
+```
+.
+├── index.html                        Homepage (hand-coded HTML/CSS/JS)
+├── blog/
+│   ├── index.njk                     Blog index template
+│   ├── blog.css                      Blog styles
+│   └── posts/
+│       ├── posts.11tydata.json       Default frontmatter for all posts
+│       ├── 2026-04-30-welcome.md     Your own posts
+│       └── 2023-05-…-linkedin-….md   Imported from LinkedIn
+├── _includes/layouts/
+│   ├── base.njk                      Shared head/header/footer
+│   ├── blog-index.njk                Wraps the post list page
+│   └── post.njk                      Wraps a single post
+├── src/
+│   └── index.js                      Cloudflare Worker entry point
+├── scripts/
+│   ├── new-post.mjs                  npm run new-post
+│   └── add-linkedin.mjs              npm run add-linkedin
+├── data/
+│   └── linkedin-articles.txt         List of imported LinkedIn URLs (canonical)
 ├── assets/
 │   └── headshot.jpg
 ├── downloads/
-│   ├── cv-tarun-bulchandani-ai-architect.pdf
-│   ├── cv-tarun-bulchandani-chief-architect.pdf
-│   └── cv-tarun-bulchandani-governance.pdf
-├── CNAME                   Custom domain for GitHub Pages
-├── .gitignore
-└── README.md
+│   └── cv-*.pdf
+├── .eleventy.js                      Eleventy build config
+├── .eleventyignore
+├── wrangler.jsonc                    Cloudflare Worker config
+├── package.json
+└── CNAME                             tarun.bulchandanis.com
 ```
 
-## Local preview
+## OAuth / Decap CMS notes
 
-No tooling needed. Either open `index.html` directly in a browser, or run a static server from this directory:
+The Worker handles two routes for the (planned) Decap admin UI:
 
-```bash
-# Python 3 (almost always pre-installed on macOS / Linux)
-python3 -m http.server 5500
-# → http://localhost:5500
+- `GET /auth` — sets a CSRF state cookie, redirects to GitHub OAuth
+- `GET /oauth/callback` — verifies state, exchanges code for token, posts the token back to Decap via `window.opener.postMessage()`
 
-# Node (if installed)
-npx serve .
-```
+**Required env vars** (set in Cloudflare dashboard → Worker → Settings → Variables and Secrets):
 
-## Deploy to GitHub Pages
+| Variable | Description | Sensitive |
+|---|---|---|
+| `GITHUB_OAUTH_CLIENT_ID` | OAuth App client ID (from `tarun-blog-bot` GitHub account) | No |
+| `GITHUB_OAUTH_CLIENT_SECRET` | OAuth App client secret | **Yes — encrypt** |
 
-This is the recommended path.
+Both must be set on the Worker. After changing them, redeploy for the Worker to pick up the new values.
 
-1. **Push to GitHub** (replace `YOUR-USERNAME` with your GitHub handle):
+The OAuth App is owned by a dedicated `tarun-blog-bot` GitHub account that has Write access to this repo only. If a token leaks, the blast radius is one repo.
 
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial site"
-   gh repo create YOUR-USERNAME/tarun-bulchandanis-com --private --source=. --remote=origin --push
-   ```
+## Family multi-tenant
 
-   Or, if you prefer the manual route:
+Root `bulchandanis.com` is the family hub. Each person has their own subdomain, hosted from their own repo:
 
-   ```bash
-   git remote add origin git@github.com:YOUR-USERNAME/tarun-bulchandanis-com.git
-   git branch -M main
-   git push -u origin main
-   ```
+- `tarun.bulchandanis.com` — this repo
+- `rhea.bulchandanis.com` — `Bulchandani/rhea-bulchandanis-com`
+- `reyna.bulchandanis.com` — `Bulchandani/reyna-bulchandanis-com`
 
-2. **Enable Pages.** Repo → Settings → Pages → Source: `main` branch, root folder.
-
-3. **Wire the domain.** The `CNAME` file in this repo already targets `tarun.bulchandanis.com`. At your DNS provider for `bulchandanis.com`, add a CNAME record:
-
-   - Name: `tarun`
-   - Target: `YOUR-USERNAME.github.io`
-
-4. **Wait 5-15 min** for DNS propagation and GitHub to issue an SSL cert. Site lives at `https://tarun.bulchandanis.com`.
-
-## Alternative hosts (drop-in replacements)
-
-All of these work as-is — push the repo, point the domain.
-
-- **Cloudflare Pages.** Connect to GitHub. No build command. Custom domain in dashboard.
-- **Vercel.** Import the GitHub repo. Framework preset: `Other`. No build command. Custom domain in Project Settings.
-- **Netlify.** Drag-and-drop the folder onto the dashboard, or connect the GitHub repo. Custom domain in Site Settings.
-
-## Updating content
-
-- **Page copy / structure:** edit `index.html`. Push. Live in ~30s on Pages.
-- **CV PDFs:** replace files in `downloads/` keeping the same filenames. Push.
-- **Headshot:** replace `assets/headshot.jpg` keeping the same path.
-
-## Family multi-tenant plan
-
-Root `bulchandanis.com` is reserved for a family hub. Each person gets their own subdomain:
-
-- `tarun.bulchandanis.com` — this site.
-- `rhea.bulchandanis.com` — future.
-- `reyna.bulchandanis.com` — future.
-
-Each subdomain is its own independent project — fork this folder, re-skin per person, deploy as a sibling repo with its own custom domain.
-
-## v2 ideas (out of scope for v1)
-
-- Add a `/posts/` section for short-form writing on architecture, AI in regulated environments, governance.
-- A Meridian case-study deep dive page.
-- An `og-image.png` for richer social previews.
-- Add Rhea / Reyna sites under sibling subdomains.
+Each is independently deployed. The blog scaffold here can be replicated to other repos when they want one.
