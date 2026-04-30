@@ -13,5 +13,13 @@
   "assets": {
     "directory": "_site",
     "binding": "ASSETS"
+  },
+  // GitHub OAuth client ID. Public identifier (not a secret) — safe to commit.
+  // Keeping it here means every deploy preserves the value; setting it as a
+  // dashboard "Variable" instead would get overwritten by `wrangler deploy`.
+  // The matching client *secret* is set as a dashboard Secret (encrypted),
+  // since secrets DO persist across deploys.
+  "vars": {
+    "GITHUB_OAUTH_CLIENT_ID": "Ov23liynJm8y4YMMCpoy"
   }
 }
