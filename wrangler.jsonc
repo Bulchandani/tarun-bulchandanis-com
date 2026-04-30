@@ -12,7 +12,6 @@
   },
   "assets": {
     "directory": "_site",
-    "binding": "ASSETS",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS"
   }
 }
