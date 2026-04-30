@@ -11,6 +11,8 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("downloads");
   eleventyConfig.addPassthroughCopy("CNAME");
   eleventyConfig.addPassthroughCopy({ "blog/blog.css": "blog/blog.css" });
+  // Decap CMS UI — copied as-is, never templated
+  eleventyConfig.addPassthroughCopy("studio");
 
   // === Posts collection (newest first) ===
   eleventyConfig.addCollection("posts", function(api) {

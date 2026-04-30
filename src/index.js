@@ -19,41 +19,6 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Diagnostic ping — confirms the Worker is being invoked.
-    // Returns "ok" if you hit this URL; if Worker isn't running you get a 404.
-    if (url.pathname === "/__worker_ping") {
-      return new Response("ok\n", {
-        status: 200,
-        headers: { "Content-Type": "text/plain", "Cache-Control": "no-store" },
-      });
-    }
-
-    // Diagnostic env-binding inspector. Reveals what env keys are bound
-    // and the LENGTH of the OAuth values so we can verify they're set
-    // without leaking the actual secret. Remove this route once OAuth is
-    // confirmed working.
-    if (url.pathname === "/__debug_env") {
-      const safe = {
-        all_env_keys: Object.keys(env).sort(),
-        has_GITHUB_OAUTH_CLIENT_ID: !!env.GITHUB_OAUTH_CLIENT_ID,
-        has_GITHUB_OAUTH_CLIENT_SECRET: !!env.GITHUB_OAUTH_CLIENT_SECRET,
-        client_id_length: (env.GITHUB_OAUTH_CLIENT_ID || "").length,
-        client_secret_length: (env.GITHUB_OAUTH_CLIENT_SECRET || "").length,
-        client_id_prefix: (env.GITHUB_OAUTH_CLIENT_ID || "").slice(0, 6),
-        // Look for any close-but-not-exact match (case sensitivity / typos)
-        case_insensitive_match_id: Object.keys(env).find(
-          (k) => k.toLowerCase() === "github_oauth_client_id"
-        ) || null,
-        case_insensitive_match_secret: Object.keys(env).find(
-          (k) => k.toLowerCase() === "github_oauth_client_secret"
-        ) || null,
-      };
-      return new Response(JSON.stringify(safe, null, 2), {
-        status: 200,
-        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-      });
-    }
-
     if (request.method === "GET" && url.pathname === "/auth") {
       return handleAuth(request, env);
     }

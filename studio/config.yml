@@ -1,0 +1,98 @@
+# Decap CMS configuration for the studio at tarun.bulchandanis.com/studio/
+#
+# This file is fetched by the Decap CMS bundle loaded in studio/index.html.
+# It describes how to authenticate, what content collections exist, and
+# the schema of fields for each post type.
+#
+# Auth: GitHub OAuth, using the Worker-hosted /auth + /oauth/callback
+# routes (src/index.js). The OAuth App is owned by tarun-blog-bot, which
+# only has Write access to this one repo.
+
+backend:
+  name: github
+  repo: Bulchandani/tarun-bulchandanis-com
+  branch: main
+  base_url: https://tarun.bulchandanis.com
+  auth_endpoint: auth
+
+# After login, what users land on
+display_url: https://tarun.bulchandanis.com
+logo_url: https://tarun.bulchandanis.com/assets/headshot.jpg
+
+# Where uploaded images go in the repo, and how they're referenced in
+# markdown. Putting them in assets/blog/ keeps them organized and
+# served alongside other static assets.
+media_folder: assets/blog
+public_folder: /assets/blog
+
+# How many minor edits to commit at once. "simple" = each save is a
+# direct commit to main. (We're not using PR-based workflow — too much
+# friction for a single-author blog.)
+publish_mode: simple
+
+# Site URL slug — used by Decap to show preview links
+site_url: https://tarun.bulchandanis.com
+
+collections:
+  # ============================================================
+  # Your own writing — full markdown posts with body
+  # ============================================================
+  - name: own_posts
+    label: My posts
+    label_singular: Post
+    folder: blog/posts
+    create: true
+    # Filter: only show posts that are NOT linkedin imports
+    filter:
+      field: source
+      value: own
+    # Filename pattern: YYYY-MM-DD-slug.md
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{date | date('YYYY-MM-DD')}} — {{title}}"
+    sortable_fields: [date, title]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Published
+        field: draft
+        pattern: false
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: slug, label: URL slug, widget: string, hint: "URL path under /blog/. Lowercase, hyphenated. Auto-generated from title if blank.", required: false }
+      - { name: date, label: Date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: excerpt, label: Excerpt, widget: text, hint: "1–2 sentences shown on the blog index card. Optional but recommended.", required: false }
+      - { name: source, label: Source, widget: hidden, default: own }
+      - { name: author, label: Author, widget: hidden, default: Tarun Bulchandani }
+      - { name: draft, label: Draft, widget: boolean, default: false, hint: "If checked, the post is hidden from the blog index until unchecked." }
+      - { name: body, label: Body, widget: markdown }
+
+  # ============================================================
+  # LinkedIn-imported posts — link out, no body
+  # ============================================================
+  - name: linkedin_posts
+    label: LinkedIn imports
+    label_singular: LinkedIn post
+    folder: blog/posts
+    create: true
+    filter:
+      field: source
+      value: linkedin
+    slug: "{{year}}-{{month}}-{{day}}-linkedin-{{slug}}"
+    summary: "{{date | date('YYYY-MM-DD')}} — {{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: slug, label: URL slug, widget: string, hint: "URL path under /blog/. Auto-generated from title if blank.", required: false }
+      - { name: date, label: Published date (on LinkedIn), widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { name: excerpt, label: Excerpt, widget: text, required: false }
+      - { name: source, label: Source, widget: hidden, default: linkedin }
+      - { name: external, label: LinkedIn URL, widget: string, hint: "https://www.linkedin.com/pulse/..." }
+      - { name: image, label: Hero image URL, widget: string, required: false, hint: "Optional. Usually the og:image from LinkedIn." }
+      - { name: body, label: Body (optional), widget: markdown, required: false, hint: "Usually empty — LinkedIn posts link out, they're not hosted here." }
+
+  # ============================================================
+  # Site config — single-file edits (e.g. the welcome post)
+  # ============================================================
+  # (None for now — add later if you want to edit the homepage,
+  # CV file paths, etc. through the CMS rather than git.)

@@ -11,3 +11,5 @@ scripts/**
 data/**
 src/**
 wrangler.jsonc
+# Studio is the Decap CMS UI — copied through verbatim, not templated
+studio/**
