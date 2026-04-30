@@ -19,6 +19,15 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Diagnostic ping — confirms the Worker is being invoked.
+    // Returns "ok" if you hit this URL; if Worker isn't running you get a 404.
+    if (url.pathname === "/__worker_ping") {
+      return new Response("ok\n", {
+        status: 200,
+        headers: { "Content-Type": "text/plain", "Cache-Control": "no-store" },
+      });
+    }
+
     if (request.method === "GET" && url.pathname === "/auth") {
       return handleAuth(request, env);
     }
