@@ -208,6 +208,11 @@ async function handleCallback(request, env) {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store",
+      // Allow this popup to communicate with its opener (the /studio/ window).
+      // Safari defaults to a stricter COOP that can isolate the popup; this
+      // explicitly opts back in so window.opener.postMessage works.
+      "Cross-Origin-Opener-Policy": "unsafe-none",
+      "Cross-Origin-Embedder-Policy": "unsafe-none",
       "Set-Cookie": `oauth_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
     },
   });
