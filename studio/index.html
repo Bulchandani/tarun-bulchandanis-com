@@ -44,31 +44,6 @@
   <p>If this takes more than a few seconds, check your network or refresh the page.</p>
 </div>
 
-<!-- DEBUG: visible log of every postMessage received on /studio/. Helps
-     diagnose Safari OAuth issues. Remove once login is confirmed working. -->
-<div id="msg-debug" style="position:fixed;bottom:8px;left:8px;max-width:60vw;max-height:40vh;overflow:auto;background:rgba(0,0,0,0.8);color:#0f0;font-family:monospace;font-size:11px;padding:8px;z-index:9999;border-radius:4px;">
-  <div style="color:#fff;margin-bottom:4px;">postMessage debug:</div>
-</div>
-<script>
-  (function() {
-    var d = document.getElementById("msg-debug");
-    function log(s) { d.appendChild(Object.assign(document.createElement("div"), { textContent: s })); d.scrollTop = d.scrollHeight; }
-    log("listener registered at " + new Date().toISOString());
-    window.addEventListener("message", function(e) {
-      var preview = typeof e.data === "string" ? e.data.slice(0, 120) : JSON.stringify(e.data).slice(0, 120);
-      log("[msg] origin=" + e.origin + " data=" + preview);
-    });
-    // Detect if Decap mounts despite messages
-    setInterval(function() {
-      var hasDecap = document.querySelector("[class*=\"nc-app\"], [class*=\"AppMainContainer\"]");
-      if (hasDecap) {
-        log("decap mounted ✓");
-        d.style.display = "none";
-      }
-    }, 1000);
-  })();
-</script>
-
 <!-- Decap CMS — loaded from their CDN. The config.yml in this folder
      describes the blog schema (post fields, where they live, etc.). -->
 <script src="https://unpkg.com/decap-cms@^3.8.4/dist/decap-cms.js"></script>

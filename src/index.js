@@ -169,71 +169,47 @@ async function handleCallback(request, env) {
     p { color: #666; font-size: 14px; }
     .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #eee; border-top-color: hsl(187, 74%, 32%); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .debug { margin-top: 24px; font-size: 11px; color: #aaa; font-family: monospace; }
-    button { margin-top: 16px; padding: 8px 16px; font-size: 13px; cursor: pointer; }
+    button { display: none; margin-top: 16px; padding: 8px 16px; font-size: 13px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="spinner" aria-hidden="true"></div>
   <h1>Signing you in…</h1>
   <p>You can close this window if it doesn't close automatically.</p>
-  <button id="manualClose" type="button" style="display:none">Close window manually</button>
-  <div class="debug" id="debug"></div>
+  <button id="manualClose" type="button">Close window</button>
   <script>
     (function() {
       var message = ${JSON.stringify(successMessage)};
       var userPayload = ${JSON.stringify(userPayload)};
-      function log(s) {
-        var d = document.getElementById("debug");
-        if (d) d.textContent += s + "\\n";
-      }
 
-      // PRIMARY MECHANISM: write Decap's user object to localStorage. The
-      // popup is same-origin as the opener (/studio/), so localStorage is
-      // shared. Decap reads this on page load — if it's there, no login
-      // popup needed. This sidesteps Safari's broken postMessage delivery
-      // to Decap's listener.
+      // PRIMARY: write Decap's user to localStorage (same-origin shared
+      // with /studio/). Decap reads this on init and skips the login flow.
       try {
         localStorage.setItem("decap-cms-user", JSON.stringify(userPayload));
-        // Some older Decap versions used the netlify-cms key name.
         localStorage.setItem("netlify-cms-user", JSON.stringify(userPayload));
-        log("stored user in localStorage");
-      } catch (err) {
-        log("localStorage error: " + err.message);
-      }
+      } catch (e) {}
 
-      // SECONDARY MECHANISM: the standard postMessage flow (works on most
-      // browser/Decap combos but Safari + Decap 3.8.4 has trouble).
+      // SECONDARY: postMessage to opener (works on most browsers).
       function send() {
         try {
           if (window.opener && window.opener !== window) {
             window.opener.postMessage(message, "*");
-            log("posted at " + new Date().toISOString());
-          } else {
-            log("no opener");
           }
-        } catch (err) { log("postMessage error: " + err.message); }
+        } catch (e) {}
       }
       window.addEventListener("message", function(e) {
-        if (e.data === "authorizing:github") {
-          log("got authorizing:github from " + e.origin);
-          send();
-        }
+        if (e.data === "authorizing:github") send();
       });
       send();
 
-      // After a brief grace period for postMessage, force-reload the opener
-      // so Decap re-initializes and reads the new user from localStorage.
-      // Wrapped in try/catch because Safari may throw on opener access if
-      // it's been navigated; the message above is the fallback in that case.
+      // After a grace period, reload the opener so Decap re-initializes
+      // and reads the user from localStorage.
       setTimeout(function() {
         try {
           if (window.opener && !window.opener.closed) {
             window.opener.location.reload();
-            log("reloaded opener");
           }
-        } catch (err) { log("opener reload failed: " + err.message); }
-        // Close the popup
+        } catch (e) {}
         setTimeout(function() {
           window.close();
           setTimeout(function() {
@@ -248,7 +224,7 @@ async function handleCallback(request, env) {
         }, 800);
       }, 1500);
 
-      // Keep posting for a while in case postMessage works
+      // Keep posting briefly in case postMessage is the path that wins.
       var attempts = 0;
       var interval = setInterval(function() {
         send();
