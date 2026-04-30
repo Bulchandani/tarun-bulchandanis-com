@@ -38,7 +38,7 @@
 </style>
 </head>
 <body>
-<div class="splash">
+<div class="splash" id="splash">
   <div class="spinner" aria-hidden="true"></div>
   <h1>Loading editor…</h1>
   <p>If this takes more than a few seconds, check your network or refresh the page.</p>
@@ -47,5 +47,33 @@
 <!-- Decap CMS — loaded from their CDN. The config.yml in this folder
      describes the blog schema (post fields, where they live, etc.). -->
 <script src="https://unpkg.com/decap-cms@^3.8.4/dist/decap-cms.js"></script>
+
+<script>
+  // Hide the splash once Decap mounts its UI.
+  (function() {
+    function hideSplash() {
+      var splash = document.getElementById('splash');
+      if (splash) splash.style.display = 'none';
+    }
+    if (typeof MutationObserver === 'undefined') {
+      setTimeout(hideSplash, 1500);
+      return;
+    }
+    var obs = new MutationObserver(function() {
+      // Decap mounts its own root inside <body>; once we see anything other
+      // than the splash, hide it.
+      var others = Array.from(document.body.children).filter(function(el) {
+        return el.id !== 'splash' && el.tagName !== 'SCRIPT';
+      });
+      if (others.length > 0) {
+        hideSplash();
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: false });
+    // Fallback: hide after 6s regardless
+    setTimeout(hideSplash, 6000);
+  })();
+</script>
 </body>
 </html>
