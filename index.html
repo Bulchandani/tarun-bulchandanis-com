@@ -22,7 +22,7 @@
     --bg-card: #ffffff;
     --text: #1a1a2e;
     --text-soft: #555;
-    --text-muted: #888;
+    --text-muted: #6f6f6f;
     --border: #e6e6ec;
     --accent-1: hsl(187, 74%, 32%);
     --accent-1-soft: hsl(187, 40%, 95%);
@@ -79,6 +79,31 @@
   a { color: var(--accent-2); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
+  /* Focus-visible — WCAG 2.4.7 — only show on keyboard nav */
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .btn-primary:focus-visible,
+  .contact-link:focus-visible {
+    outline-color: white;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px hsl(187, 74%, 40%);
+  }
+
+  /* Visually-hidden helper (screen-reader-only) */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; position: relative; }
 
   /* Skip link */
@@ -114,8 +139,11 @@
   .nav-links a:hover { color: var(--text); text-decoration: none; }
   .theme-toggle {
     background: none; border: 1px solid var(--border); border-radius: 8px;
+    min-width: 44px; min-height: 36px;
     padding: 6px 10px; cursor: pointer; color: var(--text-soft);
-    font-size: 14px; font-family: inherit;
+    font-size: 16px; font-family: inherit;
+    line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
     transition: all 0.2s ease;
   }
   .theme-toggle:hover { border-color: var(--accent-1); color: var(--text); }
@@ -188,6 +216,12 @@
   @media (max-width: 720px) {
     .hero-grid { grid-template-columns: 1fr; gap: 32px; }
     .hero { padding: 48px 0 40px; }
+  }
+  @media (max-width: 540px) {
+    .hero-photo { width: 180px; height: 180px; }
+    .hero h1 { font-size: clamp(30px, 8vw, 42px); }
+    .contact-card { padding: 32px 24px; }
+    .marquee-track { gap: 36px; padding-right: 36px; }
   }
   .hero-eyebrow {
     font-family: 'Space Grotesk', sans-serif;
@@ -472,7 +506,7 @@
     color: var(--text-soft);
     white-space: nowrap;
     flex-shrink: 0;
-    opacity: 0.55;
+    opacity: 0.7;
     transition: opacity 0.25s ease, color 0.25s ease, transform 0.25s ease;
     cursor: default;
     user-select: none;
@@ -613,6 +647,12 @@
     .marquee-inner { animation: none; }
   }
 </style>
+<noscript>
+  <style>
+    /* No-JS fallback — keep all reveal-on-scroll content visible */
+    .reveal { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 </head>
 <body>
 
@@ -620,14 +660,14 @@
 
 <header class="site-header">
   <div class="container nav">
-    <a href="#" class="brand">Tarun Bulchandani</a>
+    <a href="#main" class="brand">Tarun Bulchandani</a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#what">What I do</a>
       <a href="#story">Story</a>
       <a href="#projects">Projects</a>
       <a href="#cv">CV</a>
       <a href="#contact">Contact</a>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">🌙</button>
     </nav>
   </div>
 </header>
@@ -672,27 +712,27 @@
     <div class="container">
       <div class="stats-grid">
         <div class="stat reveal">
-          <div class="stat-num"><span class="counter" data-target="20">0</span><span>+</span></div>
+          <div class="stat-num"><span class="counter" data-target="20">20</span><span>+</span></div>
           <div class="stat-label">Years in architecture</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-num"><span class="counter" data-target="15">0</span><span>+</span></div>
+          <div class="stat-num"><span class="counter" data-target="15">15</span><span>+</span></div>
           <div class="stat-label">Global enterprises served</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-num"><span>$</span><span class="counter" data-target="30">0</span><span>M</span></div>
+          <div class="stat-num"><span>$</span><span class="counter" data-target="30">30</span><span>M</span></div>
           <div class="stat-label">Saved · Aviva rationalisation</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-num"><span>CHF</span><span class="counter" data-target="350">0</span><span>M+</span></div>
+          <div class="stat-num"><span>CHF</span><span class="counter" data-target="350">350</span><span>M+</span></div>
           <div class="stat-label">Programme · Nestlé S/4HANA</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-num"><span class="counter" data-target="100">0</span><span>+</span></div>
+          <div class="stat-num"><span class="counter" data-target="100">100</span><span>+</span></div>
           <div class="stat-label">Apps under guardrails</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-num"><span>$</span><span class="counter" data-target="100">0</span><span>K+/yr</span></div>
+          <div class="stat-num"><span>$</span><span class="counter" data-target="100">100</span><span>K+/yr</span></div>
           <div class="stat-label">Saved · Meridian build</div>
         </div>
       </div>
@@ -730,13 +770,13 @@
   </section>
 
   <!-- STACK MARQUEE -->
-  <section class="stack-marquee">
+  <section class="stack-marquee" aria-labelledby="stack-heading">
     <div class="container">
-      <div class="marquee-eyebrow">Stack I work with</div>
+      <h2 id="stack-heading" class="marquee-eyebrow">Stack I work with</h2>
     </div>
-    <div class="marquee" aria-hidden="true">
+    <div class="marquee">
       <div class="marquee-inner">
-        <div class="marquee-track">
+        <div class="marquee-track" role="list" aria-label="Tools, platforms and technologies">
           <span class="marquee-logo">SAP</span>
           <span class="marquee-logo">Salesforce</span>
           <span class="marquee-logo">AWS</span>
@@ -1114,12 +1154,20 @@
     const stored = localStorage.getItem('theme');
     const initial = stored || 'light';
     document.documentElement.setAttribute('data-theme', initial);
-    toggle.textContent = initial === 'dark' ? '☀️' : '🌙';
+
+    function syncToggle(theme) {
+      toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggle.setAttribute('aria-label',
+        theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    }
+    syncToggle(initial);
+
     toggle.addEventListener('click', () => {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+      syncToggle(next);
     });
   })();
 
@@ -1193,6 +1241,9 @@
       }
       requestAnimationFrame(tick);
     }
+
+    // Reset to 0 only when JS runs — HTML has the real number for no-JS fallback
+    counters.forEach(c => { c.textContent = '0'; });
 
     if (!('IntersectionObserver' in window)) {
       counters.forEach(c => animate(c, parseInt(c.dataset.target, 10), 1400));
