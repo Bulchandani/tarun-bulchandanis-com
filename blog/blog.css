@@ -180,6 +180,35 @@ main { flex: 1; }
 .blog-list { padding: 56px 0 100px; }
 @media (max-width: 720px) { .blog-list { padding: 40px 0 80px; } }
 
+.blog-list-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 28px;
+}
+.rss-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.rss-link:hover {
+  color: hsl(28, 90%, 45%);
+  border-color: hsl(28, 90%, 60%);
+  background: hsl(28, 90%, 96%);
+}
+@media (prefers-color-scheme: dark) {
+  .rss-link:hover { background: hsla(28, 60%, 50%, 0.12); }
+}
+
 .post-list {
   list-style: none;
   display: flex;

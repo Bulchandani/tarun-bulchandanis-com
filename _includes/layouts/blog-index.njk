@@ -11,6 +11,14 @@ layout: layouts/base.njk
 
 <section class="blog-list">
   <div class="container">
+    <div class="blog-list-actions">
+      <a class="rss-link" href="/blog/feed.xml" aria-label="RSS feed">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M3 5.5C12.7 5.5 18.5 11.3 18.5 21M3 12.5C7.7 12.5 11.5 16.3 11.5 21M5 18a2 2 0 1 1 0 .01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        Subscribe via RSS
+      </a>
+    </div>
     {% if collections.posts.length == 0 %}
       <p class="empty">No posts yet — check back soon.</p>
     {% else %}
