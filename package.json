@@ -6,9 +6,12 @@
   "scripts": {
     "build": "eleventy",
     "dev": "eleventy --serve --port=8080",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev",
     "add-linkedin": "node scripts/add-linkedin.mjs"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0"
+    "@11ty/eleventy": "^3.0.0",
+    "wrangler": "^4.87.0"
   }
 }

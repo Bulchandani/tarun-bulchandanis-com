@@ -7,6 +7,7 @@ package.json
 package-lock.json
 index.html
 # Cloudflare Pages Functions are deployed by Cloudflare directly, not via 11ty
-functions/**
 scripts/**
 data/**
+src/**
+wrangler.jsonc

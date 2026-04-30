@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tarun-bulchandanis-com",
+  "main": "src/index.js",
+  "compatibility_date": "2026-04-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "_site",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page"
+  }
+}

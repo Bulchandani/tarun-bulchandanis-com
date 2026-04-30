@@ -1,18 +1,71 @@
-// /oauth/callback — Cloudflare Pages Function
+// src/index.js — Cloudflare Worker entry point
 //
-// GitHub redirects here after the user authorizes the OAuth App.
-// We:
-//   1. Verify the state cookie matches the URL state (CSRF check)
-//   2. Exchange the auth code for a GitHub access token
-//   3. Return HTML that posts the token back to the parent window (Decap CMS)
-//      using window.opener.postMessage()
+// This Worker serves static assets (the 11ty-built /blog/, the existing
+// homepage, etc.) and handles two dynamic routes for the GitHub OAuth
+// flow that authenticates the Decap CMS editor at /studio/:
 //
-// Env vars used (set in Cloudflare Pages dashboard, not in code):
-//   GITHUB_OAUTH_CLIENT_ID     — the OAuth App's client ID (public)
-//   GITHUB_OAUTH_CLIENT_SECRET — the OAuth App's client secret (sensitive!)
+//   GET /auth           — redirects to GitHub OAuth, sets CSRF cookie
+//   GET /oauth/callback — verifies state, exchanges code for token,
+//                         hands the token back to Decap via postMessage
+//
+// Static assets come from _site/ via the ASSETS binding configured in
+// wrangler.jsonc. The binding is fast (Cloudflare's CDN) and free.
+//
+// Required env vars (set in dashboard → Settings → Variables and Secrets):
+//   GITHUB_OAUTH_CLIENT_ID     — public, the OAuth App client ID
+//   GITHUB_OAUTH_CLIENT_SECRET — encrypted, the OAuth App client secret
 
-export async function onRequestGet(context) {
-  const { env, request } = context;
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+
+    if (request.method === "GET" && url.pathname === "/auth") {
+      return handleAuth(request, env);
+    }
+    if (request.method === "GET" && url.pathname === "/oauth/callback") {
+      return handleCallback(request, env);
+    }
+
+    // Everything else: serve from static assets (_site/)
+    return env.ASSETS.fetch(request);
+  },
+};
+
+// =====================================================================
+// /auth — kicks off the OAuth flow
+// =====================================================================
+async function handleAuth(request, env) {
+  const url = new URL(request.url);
+
+  if (!env.GITHUB_OAUTH_CLIENT_ID) {
+    return errorPage(
+      "GITHUB_OAUTH_CLIENT_ID is not set. " +
+      "Set it in the Worker's Settings → Variables and Secrets."
+    );
+  }
+
+  const state = crypto.randomUUID();
+
+  const ghAuthorizeUrl = new URL("https://github.com/login/oauth/authorize");
+  ghAuthorizeUrl.searchParams.set("client_id", env.GITHUB_OAUTH_CLIENT_ID);
+  ghAuthorizeUrl.searchParams.set("scope", "repo,user:email");
+  ghAuthorizeUrl.searchParams.set("state", state);
+  ghAuthorizeUrl.searchParams.set("redirect_uri", `${url.origin}/oauth/callback`);
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      "Location": ghAuthorizeUrl.toString(),
+      "Set-Cookie": `oauth_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`,
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+// =====================================================================
+// /oauth/callback — receives code from GitHub, returns token to Decap
+// =====================================================================
+async function handleCallback(request, env) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
@@ -20,28 +73,27 @@ export async function onRequestGet(context) {
   const errorDesc = url.searchParams.get("error_description");
 
   if (error) {
-    return errorPage(`GitHub returned: ${error}${errorDesc ? " — " + errorDesc : ""}`, url.origin);
+    return oauthErrorPage(`GitHub returned: ${error}${errorDesc ? " — " + errorDesc : ""}`, url.origin);
   }
   if (!code) {
-    return errorPage("Missing authorization code in callback.", url.origin);
+    return oauthErrorPage("Missing authorization code in callback.", url.origin);
   }
 
-  // CSRF: state from URL must match the state we set in the cookie at /auth
+  // CSRF: state from URL must match the cookie we set in /auth
   const cookieHeader = request.headers.get("Cookie") || "";
   const cookieState = (cookieHeader.match(/(?:^|;\s*)oauth_state=([^;]+)/) || [])[1];
   if (!state || !cookieState || state !== cookieState) {
-    return errorPage("State mismatch — possible CSRF. Please try logging in again.", url.origin);
+    return oauthErrorPage("State mismatch — possible CSRF. Please try logging in again.", url.origin);
   }
 
   if (!env.GITHUB_OAUTH_CLIENT_ID || !env.GITHUB_OAUTH_CLIENT_SECRET) {
-    return errorPage(
+    return oauthErrorPage(
       "OAuth env vars not set. Both GITHUB_OAUTH_CLIENT_ID and GITHUB_OAUTH_CLIENT_SECRET " +
-      "must be configured in Cloudflare Pages → Settings → Environment variables.",
+      "must be set in Settings → Variables and Secrets.",
       url.origin
     );
   }
 
-  // Exchange the code for an access token
   let accessToken;
   try {
     const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
@@ -60,19 +112,19 @@ export async function onRequestGet(context) {
     });
 
     if (!tokenRes.ok) {
-      return errorPage(`Token exchange failed: HTTP ${tokenRes.status}`, url.origin);
+      return oauthErrorPage(`Token exchange failed: HTTP ${tokenRes.status}`, url.origin);
     }
     const tokenData = await tokenRes.json();
     if (tokenData.error) {
-      return errorPage(`GitHub: ${tokenData.error_description || tokenData.error}`, url.origin);
+      return oauthErrorPage(`GitHub: ${tokenData.error_description || tokenData.error}`, url.origin);
     }
     accessToken = tokenData.access_token;
   } catch (err) {
-    return errorPage(`Network error during token exchange: ${err.message}`, url.origin);
+    return oauthErrorPage(`Network error during token exchange: ${err.message}`, url.origin);
   }
 
   if (!accessToken) {
-    return errorPage("No access token returned by GitHub.", url.origin);
+    return oauthErrorPage("No access token returned by GitHub.", url.origin);
   }
 
   // Decap expects this exact message format from the popup
@@ -105,13 +157,10 @@ export async function onRequestGet(context) {
           window.opener.postMessage(message, targetOrigin);
         }
       }
-      // Decap sends "authorizing:github" once it's listening; reply when we see it
       window.addEventListener("message", function(e) {
         if (e.data === "authorizing:github") send();
       });
-      // Also send immediately in case Decap is already waiting
       send();
-      // Re-send a few times to handle race conditions, then close
       var attempts = 0;
       var interval = setInterval(function() {
         send();
@@ -127,13 +176,26 @@ export async function onRequestGet(context) {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store",
-      // Wipe the state cookie now that we're done with it
       "Set-Cookie": `oauth_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
     },
   });
 }
 
-function errorPage(message, origin) {
+// =====================================================================
+// Error pages
+// =====================================================================
+function errorPage(message) {
+  const safe = String(message).replace(/[<>&]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;"})[c]);
+  return new Response(
+    `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Configuration error</title>
+    <style>body{font-family:system-ui;padding:40px;max-width:520px;margin:0 auto;color:#333}
+    h1{color:#c00;font-size:20px}code{background:#f4f4f4;padding:8px 12px;border-radius:4px;display:block;margin-top:14px;font-size:13px;word-break:break-word}</style>
+    </head><body><h1>Authorization not configured</h1><code>${safe}</code></body></html>`,
+    { status: 500, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } }
+  );
+}
+
+function oauthErrorPage(message, origin) {
   const safeMessage = String(message).replace(/[<>&]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;"})[c]);
   const errorPayload = JSON.stringify({ message });
   const errorMessage = `authorization:github:error:${errorPayload}`;
@@ -168,9 +230,6 @@ function errorPage(message, origin) {
 </html>`;
   return new Response(html, {
     status: 400,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
+    headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
   });
 }
