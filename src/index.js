@@ -127,9 +127,36 @@ async function handleCallback(request, env) {
     return oauthErrorPage("No access token returned by GitHub.", url.origin);
   }
 
+  // Fetch GitHub user info so we can build a complete Decap user object.
+  // (Decap stores this in localStorage and uses it to skip the login flow
+  // on subsequent loads.)
+  let ghUser = null;
+  try {
+    const userRes = await fetch("https://api.github.com/user", {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "tarun.bulchandanis.com OAuth handler",
+      },
+    });
+    if (userRes.ok) ghUser = await userRes.json();
+  } catch (err) {
+    // Non-fatal — Decap can work with token-only, just won't show the name.
+  }
+
+  const userPayload = {
+    token: accessToken,
+    backendName: "github",
+    ...(ghUser && {
+      login: ghUser.login,
+      name: ghUser.name || ghUser.login,
+      email: ghUser.email,
+      avatar_url: ghUser.avatar_url,
+    }),
+  };
+
   // Decap expects this exact message format from the popup
-  const successPayload = JSON.stringify({ token: accessToken, provider: "github" });
-  const successMessage = `authorization:github:success:${successPayload}`;
+  const successMessage = `authorization:github:success:${JSON.stringify(userPayload)}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -155,14 +182,31 @@ async function handleCallback(request, env) {
   <script>
     (function() {
       var message = ${JSON.stringify(successMessage)};
+      var userPayload = ${JSON.stringify(userPayload)};
       function log(s) {
         var d = document.getElementById("debug");
         if (d) d.textContent += s + "\\n";
       }
+
+      // PRIMARY MECHANISM: write Decap's user object to localStorage. The
+      // popup is same-origin as the opener (/studio/), so localStorage is
+      // shared. Decap reads this on page load — if it's there, no login
+      // popup needed. This sidesteps Safari's broken postMessage delivery
+      // to Decap's listener.
+      try {
+        localStorage.setItem("decap-cms-user", JSON.stringify(userPayload));
+        // Some older Decap versions used the netlify-cms key name.
+        localStorage.setItem("netlify-cms-user", JSON.stringify(userPayload));
+        log("stored user in localStorage");
+      } catch (err) {
+        log("localStorage error: " + err.message);
+      }
+
+      // SECONDARY MECHANISM: the standard postMessage flow (works on most
+      // browser/Decap combos but Safari + Decap 3.8.4 has trouble).
       function send() {
         try {
           if (window.opener && window.opener !== window) {
-            // Send to both '*' and the explicit origin to maximize delivery.
             window.opener.postMessage(message, "*");
             log("posted at " + new Date().toISOString());
           } else {
@@ -170,22 +214,27 @@ async function handleCallback(request, env) {
           }
         } catch (err) { log("postMessage error: " + err.message); }
       }
-      // Decap pings "authorizing:github" once it's listening; respond.
       window.addEventListener("message", function(e) {
         if (e.data === "authorizing:github") {
           log("got authorizing:github from " + e.origin);
           send();
         }
       });
-      // Send immediately too — Decap may already be listening.
       send();
-      var attempts = 0;
-      var interval = setInterval(function() {
-        send();
-        attempts++;
-        if (attempts >= 8) {
-          clearInterval(interval);
-          // Try to close. If popup-close is blocked, surface a manual button.
+
+      // After a brief grace period for postMessage, force-reload the opener
+      // so Decap re-initializes and reads the new user from localStorage.
+      // Wrapped in try/catch because Safari may throw on opener access if
+      // it's been navigated; the message above is the fallback in that case.
+      setTimeout(function() {
+        try {
+          if (window.opener && !window.opener.closed) {
+            window.opener.location.reload();
+            log("reloaded opener");
+          }
+        } catch (err) { log("opener reload failed: " + err.message); }
+        // Close the popup
+        setTimeout(function() {
           window.close();
           setTimeout(function() {
             if (!window.closed) {
@@ -196,8 +245,15 @@ async function handleCallback(request, env) {
               }
             }
           }, 600);
-        }
-      }, 400);
+        }, 800);
+      }, 1500);
+
+      // Keep posting for a while in case postMessage works
+      var attempts = 0;
+      var interval = setInterval(function() {
+        send();
+        if (++attempts >= 4) clearInterval(interval);
+      }, 350);
     })();
   </script>
 </body>

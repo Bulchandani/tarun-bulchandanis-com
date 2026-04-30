@@ -17,20 +17,22 @@ layout: layouts/base.njk
       <ol class="post-list">
         {% for post in collections.posts %}
           <li class="post-card">
-            <a class="post-card-link" href="{% if post.data.source == 'linkedin' %}{{ post.data.external }}{% else %}{{ post.url }}{% endif %}"{% if post.data.source == 'linkedin' %} target="_blank" rel="noopener"{% endif %}>
+            {# All posts (own + LinkedIn imports with full body) are hosted
+               here. The card always links to the local /blog/{slug}/ page;
+               the "From LinkedIn" tag still flags the source for transparency,
+               and each post page has a "View original on LinkedIn" link. #}
+            <a class="post-card-link" href="{{ post.url }}">
               <div class="post-meta">
                 <time datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
                 {% if post.data.source == 'linkedin' %}
-                  <span class="source-tag source-tag--linkedin">LinkedIn ↗</span>
+                  <span class="source-tag source-tag--linkedin">From LinkedIn</span>
                 {% endif %}
               </div>
               <h2 class="post-title">{{ post.data.title }}</h2>
               {% if post.data.excerpt %}
                 <p class="post-excerpt">{{ post.data.excerpt }}</p>
               {% endif %}
-              <span class="post-cta">
-                {% if post.data.source == 'linkedin' %}Read on LinkedIn{% else %}Read post{% endif %} →
-              </span>
+              <span class="post-cta">Read post →</span>
             </a>
           </li>
         {% endfor %}
