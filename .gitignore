@@ -12,3 +12,13 @@ Desktop.ini
 
 # Logs
 *.log
+
+# Node / Eleventy
+node_modules/
+_site/
+.cache/
+
+# Cloudflare Workers (OAuth proxy — added in step 4)
+workers/.wrangler/
+workers/node_modules/
+

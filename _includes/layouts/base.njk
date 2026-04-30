@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} — Tarun Bulchandani</title>
+  <meta name="description" content="{{ description or excerpt or 'Long-form writing on architecture, AI, and enterprise transformation by Tarun Bulchandani.' }}">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta property="og:title" content="{{ title }} — Tarun Bulchandani">
+  <meta property="og:description" content="{{ description or excerpt or 'Long-form writing on architecture, AI, and enterprise transformation.' }}">
+  <meta property="og:type" content="{{ ogType or 'website' }}">
+  <meta property="og:url" content="https://tarun.bulchandanis.com{{ page.url }}">
+  {% if image %}<meta property="og:image" content="{{ image }}">{% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/blog/blog.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand">Tarun Bulchandani</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/#what">What I do</a>
+        <a href="/#story">Story</a>
+        <a href="/#projects">Projects</a>
+        <a href="/blog/" class="{% if page.url == '/blog/' or page.url.startsWith('/blog/') %}is-active{% endif %}">Blog</a>
+        <a href="/#cv">CV</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; <span id="year"></span> Tarun Bulchandani</span>
+      <span><a href="https://bulchandanis.com">bulchandanis.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

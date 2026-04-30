@@ -1,0 +1,14 @@
+{
+  "name": "tarun-bulchandanis-com",
+  "version": "1.0.0",
+  "description": "Personal portfolio + blog for Tarun Bulchandani",
+  "private": true,
+  "scripts": {
+    "build": "eleventy",
+    "dev": "eleventy --serve --port=8080",
+    "add-linkedin": "node scripts/add-linkedin.mjs"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

@@ -1,0 +1,40 @@
+---
+layout: layouts/base.njk
+---
+<section class="blog-hero">
+  <div class="container">
+    <span class="eyebrow">Writing</span>
+    <h1>Notes on architecture, <em>AI</em>, and the enterprise.</h1>
+    <p class="lede">Long-form pieces on what works, what breaks, and what's coming next. New writing also goes out on LinkedIn.</p>
+  </div>
+</section>
+
+<section class="blog-list">
+  <div class="container">
+    {% if collections.posts.length == 0 %}
+      <p class="empty">No posts yet — check back soon.</p>
+    {% else %}
+      <ol class="post-list">
+        {% for post in collections.posts %}
+          <li class="post-card">
+            <a class="post-card-link" href="{% if post.data.source == 'linkedin' %}{{ post.data.external }}{% else %}{{ post.url }}{% endif %}"{% if post.data.source == 'linkedin' %} target="_blank" rel="noopener"{% endif %}>
+              <div class="post-meta">
+                <time datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
+                {% if post.data.source == 'linkedin' %}
+                  <span class="source-tag source-tag--linkedin">LinkedIn ↗</span>
+                {% endif %}
+              </div>
+              <h2 class="post-title">{{ post.data.title }}</h2>
+              {% if post.data.excerpt %}
+                <p class="post-excerpt">{{ post.data.excerpt }}</p>
+              {% endif %}
+              <span class="post-cta">
+                {% if post.data.source == 'linkedin' %}Read on LinkedIn{% else %}Read post{% endif %} →
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </div>
+</section>

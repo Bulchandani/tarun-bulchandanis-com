@@ -1,0 +1,41 @@
+---
+layout: layouts/base.njk
+ogType: article
+---
+<article class="post">
+  <div class="container container--narrow">
+    <a class="post-back" href="/blog/">← All writing</a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
+        {% if source == 'linkedin' %}
+          <span class="source-tag source-tag--linkedin">From LinkedIn ↗</span>
+        {% endif %}
+        {% if author %}
+          <span class="post-author">by {{ author }}</span>
+        {% endif %}
+      </div>
+      <h1 class="post-title">{{ title }}</h1>
+      {% if excerpt %}<p class="post-lede">{{ excerpt }}</p>{% endif %}
+    </header>
+
+    {% if source == 'linkedin' and external %}
+      <div class="linkedin-banner">
+        <p>Originally published on LinkedIn.</p>
+        <a class="btn btn-primary" href="{{ external }}" target="_blank" rel="noopener">Read the full piece on LinkedIn →</a>
+      </div>
+    {% endif %}
+
+    <div class="post-body">
+      {{ content | safe }}
+    </div>
+
+    <footer class="post-footer">
+      {% if external %}
+        <a class="post-external" href="{{ external }}" target="_blank" rel="noopener">View on LinkedIn ↗</a>
+      {% endif %}
+      <a class="post-back" href="/blog/">← All writing</a>
+    </footer>
+  </div>
+</article>

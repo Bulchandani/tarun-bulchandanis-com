@@ -1,0 +1,8 @@
+# Files in the project root that 11ty should NOT treat as templates.
+# (Static passthrough copies them through unchanged via .eleventy.js)
+README.md
+node_modules/**
+_site/**
+package.json
+package-lock.json
+index.html
