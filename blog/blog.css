@@ -19,23 +19,24 @@
   --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.05), 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0e0f1a;
-    --bg-soft: #161827;
-    --bg-card: #1a1c2e;
-    --text: #e8e9f3;
-    --text-soft: #b8bacb;
-    --text-muted: #7d8095;
-    --border: #2a2c3f;
-    --accent-1: hsl(187, 65%, 58%);
-    --accent-1-soft: hsla(187, 60%, 40%, 0.18);
-    --accent-1-border: hsla(187, 60%, 50%, 0.3);
-    --accent-2: hsl(270, 65%, 70%);
-    --accent-2-soft: hsla(270, 60%, 50%, 0.18);
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 22px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.4), 0 18px 40px rgba(0, 0, 0, 0.5);
-  }
+/* Manual dark-mode toggle — matches the homepage's localStorage-driven
+   theme switcher. The data-theme attribute is set on <html> by the
+   inline script in base.njk's <head>. */
+[data-theme="dark"] {
+  --bg: #0e0f1a;
+  --bg-soft: #161827;
+  --bg-card: #1a1c2e;
+  --text: #e8e9f3;
+  --text-soft: #b8bacb;
+  --text-muted: #7d8095;
+  --border: #2a2c3f;
+  --accent-1: hsl(187, 65%, 58%);
+  --accent-1-soft: hsla(187, 60%, 40%, 0.18);
+  --accent-1-border: hsla(187, 60%, 50%, 0.3);
+  --accent-2: hsl(270, 65%, 70%);
+  --accent-2-soft: hsla(270, 60%, 50%, 0.18);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 22px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.4), 0 18px 40px rgba(0, 0, 0, 0.5);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -83,9 +84,7 @@ main { flex: 1; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-@media (prefers-color-scheme: dark) {
-  .site-header { background: rgba(14, 15, 26, 0.85); }
-}
+[data-theme="dark"] .site-header { background: rgba(14, 15, 26, 0.85); }
 .header-inner {
   display: flex;
   justify-content: space-between;
@@ -113,6 +112,26 @@ main { flex: 1; }
 }
 .nav-links a:hover, .nav-links a.is-active { color: var(--accent-1); }
 .nav-links a.is-active { font-weight: 600; }
+
+/* Theme toggle button — matches the homepage's */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-soft);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+.theme-toggle:hover { border-color: var(--accent-1); color: var(--text); transform: scale(1.05); }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
 
 @media (max-width: 600px) {
   .nav-links { gap: 14px; font-size: 13px; }

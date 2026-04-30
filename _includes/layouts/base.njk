@@ -3,6 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Apply the theme before any paint to avoid a flash of light/dark.
+       Reads the same localStorage key as the homepage so the user's
+       chosen theme follows them across the site. -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
   <title>{{ title }} — Tarun Bulchandani</title>
   <meta name="description" content="{{ description or excerpt or 'Long-form writing on architecture, AI, and enterprise transformation by Tarun Bulchandani.' }}">
   <meta name="theme-color" content="#1a1a2e">
@@ -27,9 +40,10 @@
         <a href="/#what">What I do</a>
         <a href="/#story">Story</a>
         <a href="/#projects">Projects</a>
-        <a href="/blog/" class="{% if page.url == '/blog/' or page.url.startsWith('/blog/') %}is-active{% endif %}">Blog</a>
+        <a href="/blog/" class="{% if page.url == '/blog/' or page.url.startsWith('/blog/') %}is-active{% endif %}">Writing</a>
         <a href="/#cv">CV</a>
         <a href="/#contact">Contact</a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">🌙</button>
       </nav>
     </div>
   </header>
@@ -45,6 +59,28 @@
     </div>
   </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Theme toggle — reads/writes the same localStorage key as the homepage.
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+
+      function syncToggle(theme) {
+        toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      }
+      syncToggle(document.documentElement.getAttribute('data-theme') || 'light');
+
+      toggle.addEventListener('click', function() {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        syncToggle(next);
+      });
+    })();
+  </script>
 </body>
 </html>
