@@ -20,6 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import TurndownService from "turndown";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +31,9 @@ const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36";
 
 // ---------- argument parsing ----------
-const args = process.argv.slice(2);
+const rawArgs = process.argv.slice(2);
+const refresh = rawArgs.includes("--refresh");
+const args = rawArgs.filter((a) => a !== "--refresh");
 let urls = [];
 
 if (args.length === 0) {
@@ -82,6 +85,8 @@ console.log(`Processing ${urls.length} URL${urls.length === 1 ? "" : "s"}...\n`)
 let created = 0;
 let skipped = 0;
 let failed = 0;
+let withBody = 0;
+let excerptOnly = 0;
 const summary = [];
 
 for (let i = 0; i < urls.length; i++) {
@@ -91,7 +96,10 @@ for (let i = 0; i < urls.length; i++) {
     const result = await processOne(url);
     if (result.status === "created") {
       created++;
-      console.log(`${prefix} ✓ Created: ${result.filename}`);
+      const tag = result.hasFullBody ? "✓ full body" : "○ excerpt only";
+      if (result.hasFullBody) withBody++;
+      else excerptOnly++;
+      console.log(`${prefix} ${tag}: ${result.filename}`);
       summary.push({ url, ok: true, file: result.filename, title: result.title });
     } else if (result.status === "skipped") {
       skipped++;
@@ -109,7 +117,7 @@ for (let i = 0; i < urls.length; i++) {
 // ---------- summary ----------
 console.log("");
 console.log("─".repeat(60));
-console.log(`Done. Created: ${created}  Skipped: ${skipped}  Failed: ${failed}`);
+console.log(`Done. Created: ${created} (full body: ${withBody}, excerpt only: ${excerptOnly})  Skipped: ${skipped}  Failed: ${failed}`);
 
 if (created > 0) {
   console.log("");
@@ -137,19 +145,24 @@ function printUsageAndExit() {
   console.error("  npm run add-linkedin -- <url1> <url2> <url3> ...    (multiple)");
   console.error("  npm run add-linkedin -- --from-file <path>          (one URL per line)");
   console.error("");
-  console.error("Re-running is safe — existing posts are skipped.");
+  console.error("Add --refresh to re-fetch existing posts (e.g. after updating");
+  console.error("the parser to extract more from each article):");
+  console.error("  npm run add-linkedin -- --from-file <path> --refresh");
+  console.error("");
+  console.error("Re-running without --refresh skips URLs that already have a post.");
   console.error("");
   process.exit(1);
 }
 
 async function processOne(url) {
-  // Quick check: does a file for this URL already exist? We hash the URL
-  // into the filename pattern, so checking by exact match is approximate.
-  // Instead, look for any existing file whose frontmatter `external` field
-  // matches this URL.
+  // If a file for this URL already exists, skip — UNLESS --refresh is set,
+  // in which case we delete the old file and re-fetch with the latest parser.
   const existingMatch = findExistingPostFor(url);
-  if (existingMatch) {
+  if (existingMatch && !refresh) {
     return { status: "skipped", filename: path.basename(existingMatch) };
+  }
+  if (existingMatch && refresh) {
+    fs.unlinkSync(existingMatch);
   }
 
   let html;
@@ -196,11 +209,17 @@ async function processOne(url) {
   const filename = `${dateStr}-linkedin-${slug}.md`;
   const filepath = path.join(POSTS_DIR, filename);
 
-  if (fs.existsSync(filepath)) {
+  if (fs.existsSync(filepath) && !refresh) {
     return { status: "skipped", filename };
   }
 
-  const frontmatter = [
+  // Try to extract the full article body. If extraction fails (LinkedIn
+  // changes the HTML structure, or the article is gated, etc.), we fall
+  // back to the excerpt + link-out behavior.
+  const bodyMarkdown = extractArticleBody(html);
+  const hasFullBody = bodyMarkdown && bodyMarkdown.length > 200;
+
+  const fmLines = [
     "---",
     `title: "${escapeForYaml(title)}"`,
     `slug: linkedin-${slug}`,
@@ -209,17 +228,24 @@ async function processOne(url) {
     `source: linkedin`,
     `external: "${url}"`,
     ...(image ? [`image: "${image}"`] : []),
+    `has_body: ${hasFullBody ? "true" : "false"}`,
     "---",
     "",
-    description ? `${description}\n\n` : "",
-    `*This article was originally published on LinkedIn.* [Read the full piece →](${url})`,
-    "",
-  ].join("\n");
+  ];
+
+  let bodyContent;
+  if (hasFullBody) {
+    bodyContent = bodyMarkdown + "\n";
+  } else {
+    bodyContent =
+      (description ? description + "\n\n" : "") +
+      `*This article was originally published on LinkedIn.* [Read the full piece →](${url})\n`;
+  }
 
   if (!fs.existsSync(POSTS_DIR)) fs.mkdirSync(POSTS_DIR, { recursive: true });
-  fs.writeFileSync(filepath, frontmatter, "utf8");
+  fs.writeFileSync(filepath, fmLines.join("\n") + bodyContent, "utf8");
 
-  return { status: "created", filename, title };
+  return { status: "created", filename, title, hasFullBody };
 }
 
 function findExistingPostFor(url) {
@@ -247,6 +273,78 @@ function meta(html, key) {
     if (m) return decodeHtmlEntities(m[1].trim());
   }
   return null;
+}
+
+// Extract the full article body from LinkedIn HTML and convert to markdown.
+// Returns null if extraction fails so the caller can fall back to excerpt-only.
+//
+// LinkedIn structure (as of Apr 2026): each paragraph/heading lives inside
+// its own <div class="article-main__content" data-test-id="publishing-text-block">.
+// We collect those blocks, glue them together, and run the result through
+// turndown. Light pre-processing handles LinkedIn's bold-via-span trick
+// (font-[700]) and stripping the empty <span class> wrappers.
+function extractArticleBody(html) {
+  try {
+    const blockRe =
+      /<div[^>]*class="[^"]*article-main__content[^"]*"[^>]*>([\s\S]*?)<\/div>/g;
+    const blocks = [];
+    let m;
+    while ((m = blockRe.exec(html)) !== null) {
+      blocks.push(m[1]);
+    }
+    if (blocks.length === 0) return null;
+
+    let combined = blocks.join("\n");
+
+    // LinkedIn wraps body text in <span class>...</span> with no class value.
+    // Bold is <span class="font-[700]">...</span>. Convert those before
+    // running through turndown (which would otherwise leave the spans alone).
+    combined = combined
+      // Bold spans → <strong>
+      .replace(/<span\s+class="font-\[700\]"[^>]*>([\s\S]*?)<\/span>/g, "<strong>$1</strong>")
+      // Italic spans → <em>
+      .replace(/<span\s+class="italic"[^>]*>([\s\S]*?)<\/span>/g, "<em>$1</em>")
+      // Empty/wrapper spans → just keep the inner content
+      .replace(/<span\s+class[^>]*>([\s\S]*?)<\/span>/g, "$1")
+      // Strip LinkedIn-specific HTML comments like <!---->
+      .replace(/<!---*>/g, "")
+      // Strip stray empty <p><br></p>
+      .replace(/<p>\s*<br\s*\/?>\s*<\/p>/g, "")
+      // Collapse whitespace
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!combined || combined.length < 50) return null;
+
+    const turndown = new TurndownService({
+      headingStyle: "atx",         // ## headings, not underline
+      bulletListMarker: "-",
+      codeBlockStyle: "fenced",
+      emDelimiter: "_",
+    });
+
+    // LinkedIn often uses bold <strong> as visual headings. If a paragraph
+    // is ONLY bold text (no other content) and short, promote it to ## h2.
+    turndown.addRule("boldAsHeading", {
+      filter: (node) =>
+        node.nodeName === "P" &&
+        node.children.length === 1 &&
+        node.children[0].nodeName === "STRONG" &&
+        node.textContent.trim().length < 100 &&
+        node.textContent.trim().length > 0,
+      replacement: (content, node) => "\n\n## " + node.textContent.trim() + "\n\n",
+    });
+
+    let md = turndown.turndown(combined);
+
+    // Tidy up: collapse 3+ blank lines, trim leading/trailing whitespace
+    md = md.replace(/\n{3,}/g, "\n\n").trim();
+
+    return md;
+  } catch (err) {
+    console.warn("  body extraction failed:", err.message);
+    return null;
+  }
 }
 
 // Pull the first datePublished value out of any JSON-LD <script> on the page.

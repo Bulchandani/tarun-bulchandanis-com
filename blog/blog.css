@@ -312,6 +312,43 @@ main { flex: 1; }
   max-width: 60ch;
 }
 
+.post-hero {
+  margin: 0 0 36px;
+}
+.post-hero img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: block;
+  background: var(--bg-soft);
+}
+@media (max-width: 720px) {
+  .post-hero { margin-bottom: 28px; }
+  .post-hero img { border-radius: 8px; }
+}
+
+.linkedin-note {
+  margin: 48px 0 0;
+  padding: 18px 22px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14.5px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+.linkedin-note p { margin: 0; }
+.linkedin-note a {
+  color: var(--accent-2);
+  border-bottom: 1px solid var(--accent-2-soft);
+  font-weight: 500;
+}
+.linkedin-note a:hover {
+  color: var(--accent-1);
+  border-bottom-color: var(--accent-1);
+}
+
 .linkedin-banner {
   background: var(--accent-2-soft);
   border: 1px solid var(--accent-2);

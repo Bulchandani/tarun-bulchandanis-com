@@ -20,7 +20,14 @@ ogType: article
       {% if excerpt %}<p class="post-lede">{{ excerpt }}</p>{% endif %}
     </header>
 
-    {% if source == 'linkedin' and external %}
+    {% if image %}
+      <figure class="post-hero">
+        <img src="{{ image }}" alt="" loading="lazy">
+      </figure>
+    {% endif %}
+
+    {# LinkedIn post WITHOUT a full body: show prominent CTA before the excerpt #}
+    {% if source == 'linkedin' and external and not has_body %}
       <div class="linkedin-banner">
         <p>Originally published on LinkedIn.</p>
         <a class="btn btn-primary" href="{{ external }}" target="_blank" rel="noopener">Read the full piece on LinkedIn →</a>
@@ -31,8 +38,15 @@ ogType: article
       {{ content | safe }}
     </div>
 
+    {# LinkedIn post WITH a full body: show subtle attribution at bottom #}
+    {% if source == 'linkedin' and external and has_body %}
+      <aside class="linkedin-note">
+        <p>This article was originally published on LinkedIn. <a href="{{ external }}" target="_blank" rel="noopener">View the original →</a></p>
+      </aside>
+    {% endif %}
+
     <footer class="post-footer">
-      {% if external %}
+      {% if external and not has_body %}
         <a class="post-external" href="{{ external }}" target="_blank" rel="noopener">View on LinkedIn ↗</a>
       {% endif %}
       <a class="post-back" href="/blog/">← All writing</a>
