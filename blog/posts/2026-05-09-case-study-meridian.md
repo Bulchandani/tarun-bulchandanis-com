@@ -244,7 +244,7 @@ spreadsheets while Meridian was being shaped and is now switching over.
 
 ## What I would do differently
 
-Two things, honestly.
+Two things.
 
 The first is that I should have started with the assistant rather than
 ending with it. I built the data model first and bolted the assistant
