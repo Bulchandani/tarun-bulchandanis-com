@@ -6,6 +6,27 @@ excerpt: "An AI-native personal project. How it scans hundreds of company career
 source: own
 ---
 
+## TL;DR
+
+A personal AI-native job search platform I built solo to run my own
+search end to end. It does five things: discover open roles from about
+ten sources, score each against my profile using a six-block rubric,
+generate a tailored CV and cover letter and interview prep, drive the
+application through one of five interchangeable plans, and track every
+recruiter and follow-up alongside. The five apply plans are
+interchangeable: a generic DOM filler on a CI runner, a Gemini
+computer-use agent for SPA wizards, a Claude in Chrome side panel for
+when I want eyes on the action, an Apply Pack zip with deep link for
+portals where automation is forbidden, and a local headed Chromium
+window for portals that need my logged-in session. None of them auto
+submit. About 15,000 lines of TypeScript, six weeks, one engineer.
+Around $4 per month total in LLM and infrastructure costs. The
+patterns (multi-tier model routing, prompt caching across the cron
+fleet, step-wise progress through JSONB, plans as commodities, bucket
+based polling cadence) port to any agentic always-on workload.
+
+## The full story
+
 I built Springboard to do my own job search properly. It is a personal
 project but it is also the most rigorous AI-native build I have shipped
 outside an enterprise context, and the playbook generalises to any

@@ -6,6 +6,32 @@ excerpt: "Why a small architecture team at Sonnedix is replacing commercial EA t
 source: own
 ---
 
+## TL;DR
+
+Joined Sonnedix three years ago to build the enterprise architecture
+function from zero. Year one I ran the whole corpus in Smartsheet
+to learn what we actually needed. Year two I brought in
+[Ardoq](https://www.ardoq.com/) and tried for about a year to make
+it work, but the operational overhead of a commercial EA tool needs
+a team Sonnedix does not have, and even at full data quality these
+tools do not cover PMO, vendor due diligence or workflow, which is
+where the architecture function actually spends its time. Year three
+I dropped Ardoq and built Meridian myself, in evenings and weekends.
+It is a Next.js 15 plus FastAPI plus PostgreSQL plus Microsoft
+Entra ID plus Gemini AI assistant platform, with the Central
+Application and Vendor Approval System (CAVAS, which I designed and
+named) folded in as the workflow surface. Rolling out across Sonnedix
+in 2026, designed for the senior leadership team and their direct
+lieutenants. Roughly $170K per year saved at steady state. The
+biggest win is the conversational assistant on top of the corpus,
+which flips the operational tax: instead of asking stakeholders to
+maintain architecture data, they ask questions of it.
+
+A separate Aviva detour explains why I knew the commercial-tool path
+worked there but not at Sonnedix.
+
+## The full story
+
 When I joined Sonnedix three years ago there was no enterprise architecture
 function. No operating model, no Architecture Governance Board, no
 application portfolio, no capability model. Sonnedix was scaling fast,
