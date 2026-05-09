@@ -261,7 +261,7 @@ discovery, structured rubric evaluation, prompt-cached LLM calls in a
 multi-model router, step-wise progress through JSONB, soft-delete
 with audit trail, plans as commodities, bucket-based cadence control.
 
-That portability is the actual lesson. AI-native architecture is not
+That portability is the actual learning. AI-native architecture is not
 about which model you pick. It is about how you wire model calls into
 a workflow that is auditable, restartable, cost-bound, and ultimately
 human-approvable.

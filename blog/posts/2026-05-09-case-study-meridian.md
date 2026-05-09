@@ -17,44 +17,58 @@ function from zero.
 The textbook playbook says to put a commercial enterprise architecture
 management product in early, populate it with the application portfolio
 and the capability model, and bolt the architecture review board on top.
-The market for these is well established (Planview Enterprise One, LeanIX,
-Ardoq, Avolution ABACUS, Bizzdesign), and at Aviva I had run an
-architecture function with enough people to absorb the operational tax
-that comes with one of these tools. So in the first year at Sonnedix I
-brought Planview Enterprise One in. It is a serious product, well
-respected, and at Aviva it did its job.
+The market for these is well established
+([Planview Enterprise One](https://www.planview.com/products/enterprise-one/),
+[LeanIX](https://www.leanix.net/),
+[Ardoq](https://www.ardoq.com/),
+[Avolution ABACUS](https://www.avolutionsoftware.com/),
+[Bizzdesign](https://bizzdesign.com/),
+[MEGA HOPEX](https://www.mega.com/en/product/hopex),
+[Software AG Alfabet](https://www.softwareag.com/en_corporate/platform/alfabet.html)),
+and at Aviva I had run an architecture function with enough people to
+absorb the operational tax that comes with one of these tools.
 
-It did not fit at Sonnedix, and the rest of this piece is about why and
-what I built instead.
+So at Sonnedix I tried two things in sequence. In the first year I built
+the whole architecture corpus in Smartsheet (the application portfolio,
+the capability model, the AGB tracker, the simple workflow for vendor
+sign-off) because I wanted to understand what we actually needed before
+spending money on a commercial product. In the second year, with the
+shape of the work clearer, I brought in
+[Ardoq](https://www.ardoq.com/) and migrated the Smartsheet content
+into it.
+
+Neither approach fit, and the rest of this piece is about why and what
+I built instead.
 
 ## A brief detour about Aviva, because the comparison matters
 
-At Aviva we had not started with Planview. The team had Abacus Avolution
-when I arrived, which is also a perfectly good product, but the working
-view was that we needed something better integrated with our portfolio
-governance. I ran a formal request for proposal across the major
-vendors, scored each on capability fit, integration story and total cost
-of ownership over five years, and selected Planview Enterprise One. It
-was the right answer for Aviva. We had the team to maintain the
+At Aviva, [Avolution ABACUS](https://www.avolutionsoftware.com/) was
+already in place when I arrived. It is a perfectly good product, but the
+working view in the architecture function was that we needed something
+better integrated with our portfolio governance. I ran a formal request
+for proposal across the major vendors, scored each on capability fit,
+integration story and total cost of ownership over five years, and
+selected [Planview Enterprise One](https://www.planview.com/products/enterprise-one/).
+It was the right answer for Aviva. We had the team to maintain the
 meta-model, the taxonomy governance, the role-based views and the
 integration into PMO data. It paid back.
 
-The lesson I should have absorbed earlier than I did is that the same
+The learning I should have absorbed earlier than I did is that the same
 product is not necessarily the right answer somewhere else. Aviva had
 the operational headcount. Sonnedix did not.
 
-## The Planview problem at Sonnedix
+## The Ardoq problem at Sonnedix
 
 Even the simplest enterprise EA management tool has a steep operational
 overhead. Schemas to maintain, reference data to keep clean, user roles
 to provision, integrations to keep up. At Sonnedix the architecture team
-was small. We tried for the better part of a year to bring the platform
-up to a quality threshold where stakeholders would trust the data, and
-we never got there. Some of the apps were in Planview, some were in
-spreadsheets, some were in Smartsheet, and the rationalisation was that
-"we are migrating", which is the worst of both worlds: we were paying
-for a tool we were not yet getting the benefit from, while also still
-maintaining the workarounds it was supposed to replace.
+was small. We tried for the better part of a year to bring Ardoq up to a
+quality threshold where stakeholders would trust the data, and we never
+got there. Some of the apps were in Ardoq, some were in spreadsheets,
+some were still in Smartsheet, and the rationalisation was that "we are
+migrating", which is the worst of both worlds: we were paying for a tool
+we were not yet getting the benefit from, while also still maintaining
+the workarounds it was supposed to replace.
 
 The other thing I had not appreciated about commercial EA tools when
 the team is small is what they explicitly don't cover. They are
@@ -68,22 +82,22 @@ architecture sign-off) is workflow, not architecture, and most EA tools
 have the simplest possible imitation of a workflow engine, if anything
 at all.
 
-So even if Planview had been delivering perfect EA data, it would still
+So even if Ardoq had been delivering perfect EA data, it would still
 have been only one of three or four systems that the architecture
 function had to look at to do its actual job, which is helping the
 business make better decisions about what to build and what to buy.
-At a 5,000 person company that's still operationally fine. At
+At a 5,000 person company that is still operationally fine. At
 Sonnedix's size it is, frankly, ridiculous.
 
 ## The decision to build, and how I scoped it
 
-After the first year I made the call to drop Planview and build the
-in-house alternative myself. The reframing that unlocked it: I did not
-need 100% of what Planview provides. I needed the 30% that the team at
-Sonnedix actually uses every week, plus the 30% that no commercial EA
-tool covers (the workflow, the PMO substrate, the vendor due diligence,
-the audit trail). The remaining 40% I could leave behind without
-anyone missing it.
+After the second-year experience with Ardoq I made the call to drop
+the commercial tool and build the in-house alternative myself. The
+reframing that unlocked it: I did not need 100% of what Ardoq provides.
+I needed the 30% that the team at Sonnedix actually uses every week,
+plus the 30% that no commercial EA tool covers (the workflow, the PMO
+substrate, the vendor due diligence, the audit trail). The remaining
+40% I could leave behind without anyone missing it.
 
 What I needed:
 
@@ -94,7 +108,7 @@ What I needed:
   Customer Management, Procurement, and so on), editable inline,
   rather than maintained in a separate modelling tool.
 - A PMO substrate so initiatives sit alongside the architecture rather
-  than off in another system. This is the bit a Planview cannot do.
+  than off in another system. This is the bit an Ardoq or a Planview cannot do.
 - A governance workflow, which I will describe properly below, called
   CAVAS (the Central Application and Vendor Approval System, which is
   what I named it).
@@ -210,8 +224,8 @@ capabilities that do not exist.
 This will, I think, flip the operational tax that commercial EA tools
 imposed. Stakeholders are not asked to maintain the architecture data,
 they are asking questions of it. People who would never have opened
-Planview will use Meridian regularly because the way in is a chat
-rather than a form.
+Ardoq will use Meridian regularly because the way in is a chat rather
+than a form.
 
 The list of stakeholders that Meridian is being designed for is, in
 practice, the senior leadership team and their direct lieutenants:
@@ -230,16 +244,16 @@ roughly like this:
 
 | Item | Annual |
 |---|---|
-| Eliminated, Planview Enterprise One licence | around $100K |
+| Eliminated, Ardoq licence | around $100K |
 | Eliminated, Smartsheet PMO subscription, replaced by integrated PMO board | around $15K |
 | Eliminated, recovered time on manual spreadsheet maintenance, roughly half an FTE | around $60K |
 | Added, Azure App Service plus PostgreSQL hosting | around $3K |
 | Added, Gemini API calls for RAG and the assistant | around $2K |
 | Net annualised | roughly $170K saved per year |
 
-The build itself was me, in evenings and weekends. Planview was being
+The build itself was me, in evenings and weekends. Ardoq was being
 paid for during that period regardless, so the build did not introduce
-double-spend on the way through. The team was running on Planview plus
+double-spend on the way through. The team was running on Ardoq plus
 spreadsheets while Meridian was being shaped and is now switching over.
 
 ## What I would do differently
