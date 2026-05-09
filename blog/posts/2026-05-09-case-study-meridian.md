@@ -1,186 +1,306 @@
 ---
-title: "Meridian — building the EA platform we couldn't buy"
+title: "Meridian: building the EA platform we couldn't buy"
 slug: case-study-meridian
 date: 2026-05-09
-excerpt: "How a five-person architecture team replaced ~$100K/yr of commercial EA tooling with one I built myself in production. The honest version: what worked, what I'd do differently, and why an AI-native rebuild was the right answer at our scale."
+excerpt: "Why a small architecture team at Sonnedix is replacing commercial EA tooling with a system I designed and built myself, including the Central Application and Vendor Approval System (CAVAS), and what the trade-offs were along the way."
 source: own
 ---
 
 When I joined Sonnedix three years ago there was no enterprise architecture
-function — no operating model, no governance forum, no application
-portfolio, no capability model. Just a fast-moving renewables business
-scaling through acquisitions, with the typical scale-up pull toward
-short-term fixes per project.
+function. No operating model, no Architecture Governance Board, no
+application portfolio, no capability model. Sonnedix was scaling fast,
+acquisition heavy, and the cultural pull was the usual one for a growing
+business: short-term fixes per project, repeated solutions, no shared
+language for what was being built or why. My brief was to build the
+function from zero.
 
-The textbook playbook said: stand up an EA management platform like Ardoq
-or LeanIX, populate it with the application portfolio, the capability
-model, the PMO data, and bolt the architecture review board on top. I
-brought Ardoq in because that's what had worked at Aviva.
+The textbook playbook says to put a commercial enterprise architecture
+management product in early, populate it with the application portfolio
+and the capability model, and bolt the architecture review board on top.
+The market for these is well established (Planview Enterprise One, LeanIX,
+Ardoq, Avolution ABACUS, Bizzdesign), and at Aviva I had run an
+architecture function with enough people to absorb the operational tax
+that comes with one of these tools. So in the first year at Sonnedix I
+brought Planview Enterprise One in. It is a serious product, well
+respected, and at Aviva it did its job.
 
-It didn't fit. This piece is about why, and what I built instead.
+It did not fit at Sonnedix, and the rest of this piece is about why and
+what I built instead.
 
-## The Ardoq problem
+## A brief detour about Aviva, because the comparison matters
 
-Ardoq is a great product for the right team size. At Aviva I ran an
-architecture function with enough people to absorb its operational tax —
-model maintenance, taxonomy governance, role-based views, integration
-into PMO data pipelines. At Sonnedix the architecture team was small.
-The platform never reached the data-quality threshold where stakeholders
-trusted it. We kept living in spreadsheets and Smartsheet alongside
-Ardoq, which is the worst of both worlds: paying for the tool *and*
-maintaining the workarounds.
+At Aviva we had not started with Planview. The team had Abacus Avolution
+when I arrived, which is also a perfectly good product, but the working
+view was that we needed something better integrated with our portfolio
+governance. I ran a formal request for proposal across the major
+vendors, scored each on capability fit, integration story and total cost
+of ownership over five years, and selected Planview Enterprise One. It
+was the right answer for Aviva. We had the team to maintain the
+meta-model, the taxonomy governance, the role-based views and the
+integration into PMO data. It paid back.
 
-The deeper issue was that even simple enterprise EA management platforms
-have a steep operational tax — model maintenance, taxonomy governance,
-role-based views, integration into PMO data pipelines. At Aviva I had a
-team big enough to absorb it. At Sonnedix I didn't. After a year of
-honest effort, I made the call to drop Ardoq and build the in-house
-alternative myself.
+The lesson I should have absorbed earlier than I did is that the same
+product is not necessarily the right answer somewhere else. Aviva had
+the operational headcount. Sonnedix did not.
 
-## The decision: build vs. buy, scoped properly
+## The Planview problem at Sonnedix
 
-The reframing that unlocked it: I didn't need 100% of what an Ardoq or
-LeanIX provides. I needed the 30% that the architecture team at Sonnedix
-actually uses every week. Specifically:
+Even the simplest enterprise EA management tool has a steep operational
+overhead. Schemas to maintain, reference data to keep clean, user roles
+to provision, integrations to keep up. At Sonnedix the architecture team
+was small. We tried for the better part of a year to bring the platform
+up to a quality threshold where stakeholders would trust the data, and
+we never got there. Some of the apps were in Planview, some were in
+spreadsheets, some were in Smartsheet, and the rationalisation was that
+"we are migrating", which is the worst of both worlds: we were paying
+for a tool we were not yet getting the benefit from, while also still
+maintaining the workarounds it was supposed to replace.
 
-- An **application portfolio** (~120 apps, with criticality, data
-  sensitivity, vendor, renewal lifecycle).
-- A **capability model** anchored in business value streams (Meter-to-
-  Cash, Customer Management, Procurement, etc).
-- A **PMO substrate** linking initiatives to capabilities so investment
-  decisions sit on architectural context, not just project plans.
-- A **governance workflow** — what we call the Central Application and
-  Vendor Approval System (CAVAS) — covering DPIA, technical risk
-  assessment, vendor due-diligence (Dow Jones, Moody's), through to
-  Architecture Governance Board sign-off.
-- A **single query-able pane of glass** so the question "which apps in
-  the Commercial domain are touching customer PII and have a renewal
-  due before year-end" returns in five seconds, not five spreadsheets.
+The other thing I had not appreciated about commercial EA tools when
+the team is small is what they explicitly don't cover. They are
+architecture inventories. They are not, and never claim to be, a place
+where the rest of the business lives. PMO programme data lives in
+Smartsheet or a project portfolio tool, not in your EA platform.
+Vendor due diligence (Dow Jones, Moody's, KYC) lives in legal and
+procurement systems, not in your EA platform. The application onboarding
+governance flow (data privacy impact, technical risk, vendor screen,
+architecture sign-off) is workflow, not architecture, and most EA tools
+have the simplest possible imitation of a workflow engine, if anything
+at all.
 
-The 70% I deliberately skipped: meta-model versioning, custom
-visualisations, multi-language taxonomy, OpenAPI exposure of every
-artefact, the integrations marketplace. A 100-person EA team needs
-those. A 5-person one doesn't.
+So even if Planview had been delivering perfect EA data, it would still
+have been only one of three or four systems that the architecture
+function had to look at to do its actual job, which is helping the
+business make better decisions about what to build and what to buy.
+At a 5,000 person company that's still operationally fine. At
+Sonnedix's size it is, frankly, ridiculous.
 
-## What I built — the Meridian stack
+## The decision to build, and how I scoped it
 
-Meridian is a single TypeScript codebase running on Azure App Service.
+After the first year I made the call to drop Planview and build the
+in-house alternative myself. The reframing that unlocked it: I did not
+need 100% of what Planview provides. I needed the 30% that the team at
+Sonnedix actually uses every week, plus the 30% that no commercial EA
+tool covers (the workflow, the PMO substrate, the vendor due diligence,
+the audit trail). The remaining 40% I could leave behind without
+anyone missing it.
 
-| Layer | Technology | Why this choice |
-|---|---|---|
-| Frontend | Next.js 15 (App Router) | Server components, end-to-end TS, fast iteration |
-| ORM | Prisma | Schema-first, deterministic migrations |
-| DB | PostgreSQL on Azure (Flexible Server) | Boring, well-understood, full SQL when I need it |
-| Auth | Microsoft Entra ID (OIDC) | Single sign-on with the rest of the Sonnedix estate, MFA inherited |
-| AI | Vercel AI SDK + Google Gemini | Conversational assistant over portfolio context |
-| Hosting | Docker on Azure App Service | Same deploy pipeline as our other internal apps |
+What I needed:
 
-The user-facing surfaces:
+- An application portfolio with the structured attributes that matter
+  to us (criticality, data sensitivity, vendor, contract renewal date,
+  domain, owner). About 120 apps.
+- A capability model anchored in our value streams (Meter to Cash,
+  Customer Management, Procurement, and so on), editable inline,
+  rather than maintained in a separate modelling tool.
+- A PMO substrate so initiatives sit alongside the architecture rather
+  than off in another system. This is the bit a Planview cannot do.
+- A governance workflow, which I will describe properly below, called
+  CAVAS (the Central Application and Vendor Approval System, which is
+  what I named it).
+- A single query-able pane of glass so the question "which Commercial
+  domain apps touch customer PII and have a contract renewal due
+  before year end" returns in five seconds instead of five spreadsheet
+  filters.
 
-1. **Portfolio explorer** — every application with structured attributes,
-   filters, and ad-hoc lists.
-2. **Capability map** — value streams → capabilities → supporting apps,
-   editable inline.
-3. **PMO board** — initiatives linked to capabilities and apps, so the
-   architecture review of a new programme is a click, not a meeting.
-4. **CAVAS workflow** — multi-stage approval (request → DPIA →
-   technical-risk assessment → vendor screen → AGB sign-off) with
-   audit trail per stage.
-5. **The conversational assistant** — the part that actually changed
-   stakeholder behaviour.
+What I deliberately skipped: meta-model versioning, custom diagram
+notations, multi-language taxonomy, an OpenAPI surface for every
+artefact, a partner-integration marketplace. A 100 person EA team
+needs those. A small one does not.
 
-## The AI bit, and why it's not a gimmick
+## The stack
 
-The single biggest unlock isn't the data model. It's the conversational
-assistant sitting on top of the data model.
+Meridian is a TypeScript codebase. Next.js 15 on the App Router for the
+front end. PostgreSQL on Azure Flexible Server for the database, Prisma
+for the ORM. Microsoft Entra ID for SSO, so it inherits the rest of the
+estate's identity and MFA without me writing any of it. Vercel AI SDK
+on top of Google Gemini for the conversational assistant. Docker on
+Azure App Service for hosting.
+
+There is also a FastAPI layer (Python) that I built deliberately,
+because the next thing I want to do with Meridian is integrate it with
+the rest of the systems landscape (SAP, Salesforce, the procurement
+system, the document repository), and a clean REST surface with
+auto-generated OpenAPI documentation makes that an afternoon of work
+per integration rather than a week. The FastAPI layer also handles the
+heavier server-side work that doesn't belong in the Next.js process,
+and its security model (token-scoped access, request rate limits,
+explicit per-route auth) is easier to reason about for the things
+that need to be reasoned about clearly.
+
+## CANVAS, which is now part of Meridian
+
+CANVAS, the Central Application and Vendor Approval System, was
+originally a standalone application. I built it first, as a separate
+codebase, because the governance workflow was the most painful gap in
+our day to day operation. New apps and new vendors were being on-boarded
+in a sequence of disconnected steps: a Smartsheet here, an email chain
+there, an Excel sheet for the DPIA, another spreadsheet for the
+technical risk assessment, a Word document for the vendor screening
+results, a meeting for the AGB sign off. The audit trail was whatever
+people remembered to put in a folder.
+
+CANVAS as a standalone product solved that. A request comes in, the
+data privacy impact assessment runs against the right template, the
+technical risk assessment against another, the vendor screen pulls
+from Dow Jones and Moody's, and the Architecture Governance Board sees
+the whole package in one view when it comes time to sign off. Every
+stage has explicit owners, explicit timeouts, and explicit escalation.
+
+After about three months of CANVAS running alongside Meridian, it
+became obvious that the two should be one product. They were sharing a
+data model anyway (you cannot do governance against an application that
+does not exist yet in the portfolio, and you cannot run the portfolio
+without an audit trail of how each app got there). The migration was a
+deliberate exercise: move CANVAS into the Meridian codebase, share the
+Prisma schema, share the Entra ID auth, share the Gemini assistant so
+that questions like "which open CAVAS requests are blocked on a vendor
+screen" can be answered in the same pane as "show me all Commercial
+domain apps". I did the migration over a series of weekends in early
+2026 and it has paid for itself already in maintenance time saved.
+
+CANVAS now sits inside Meridian as a first-class surface. When this
+goes fully live, the Sonnedix application and vendor onboarding flow
+will be one continuous, auditable, searchable system instead of half a
+dozen disconnected ones, and the AGB will see a complete request from
+inside the same tool the architects already use.
+
+## The audit story
+
+Auditability was a deliberate design constraint from day one. I am not
+going to ship a system that I cannot explain to General Counsel or the
+Chief Compliance Officer if they ask. So:
+
+- Every edit to a portfolio record, capability, value stream or CAVAS
+  request is captured with the user identity, the timestamp, the before
+  and after values, and the reason text the user provided.
+- Every login is logged, including the SSO claims that were validated
+  at the gateway.
+- Every assistant query is logged with the question, the records the
+  assistant retrieved, and the response text, so a regulator can ask
+  "what did Tarun's tool tell him on March 12" and we have the answer.
+- Every CAVAS approval has an immutable record of who signed off,
+  what they saw at the time of sign off, and what changed afterwards
+  (the system shows you "the data has changed since this approval"
+  when relevant).
+- The database itself is point-in-time recoverable to a clean state
+  at any moment in the last 30 days.
+
+These are not exotic patterns, but they are easier to design in from
+the start than to retrofit. None of the commercial EA tools we looked
+at had the workflow audit trail at this granularity, because they are
+not workflow products.
+
+## The conversational assistant, and why it actually matters
+
+The single biggest unlock of the AI side is not the data model. It is
+the conversational assistant sitting on top of the data model.
 
 Before Meridian, when a finance lead wanted to know which platforms had
-EBITDA-impacting capability dependencies, that query was a Smartsheet
-filter, then a spreadsheet pivot, then a question to me, then me
-running the actual analysis. Now they ask Meridian:
-
-> *"Which Commercial-domain apps support EBITDA reporting and have a
-> contract renewal in the next six months?"*
-
-The assistant has read access to the full architecture corpus — apps,
-capabilities, value streams, PMO initiatives, CAVAS records — and
+EBITDA-impacting capability dependencies, the answer involved a
+Smartsheet filter, a spreadsheet pivot, a question to me, and me
+running the actual analysis. Meridian gives them a chat box. The
+assistant has read access to the full architecture corpus (apps,
+capabilities, value streams, PMO initiatives, CAVAS records) and
 returns a structured answer with citations to the underlying records.
-RAG with a tightly-scoped corpus, prompt-cached system context, and
-guardrails that prevent it from inventing apps or capabilities that
-don't exist.
+There is RAG with a tightly scoped corpus, prompt-cached system
+context, and guardrails that prevent it from inventing apps or
+capabilities that do not exist.
 
-This flips the operational tax. Instead of asking stakeholders to
-maintain the architecture data, they're asking questions of it. People
-who would never have opened Ardoq use Meridian weekly because the way
-in is a chat, not a form.
+This will, I think, flip the operational tax that commercial EA tools
+imposed. Stakeholders are not asked to maintain the architecture data,
+they are asking questions of it. People who would never have opened
+Planview will use Meridian regularly because the way in is a chat
+rather than a form.
 
-## What it cost vs. what we eliminated
+The list of stakeholders that Meridian is being designed for is, in
+practice, the senior leadership team and their direct lieutenants:
+the CDO, the CIO, the General Counsel and the legal operations team,
+the Chief Compliance Officer, the heads of Finance Systems, Commercial,
+Operations, Growth and Legal, and the technology and process owners
+who report into each of those. Every one of those people has a
+different question of the same underlying architecture corpus. The
+assistant is the bit that lets a single dataset serve all of them.
 
-| Item | Annual cost |
+## What it costs and what it eliminates
+
+Once Meridian is fully live (this is happening over the course of
+2026), the picture, on a steady-state annualised basis, looks
+roughly like this:
+
+| Item | Annual |
 |---|---|
-| **Eliminated**: Ardoq enterprise licence | ~$100K |
-| **Eliminated**: Smartsheet PMO subscription (replaced by integrated PMO board) | ~$15K |
-| **Eliminated**: manual spreadsheet maintenance time (~0.5 FTE) | ~$60K |
-| **Added**: Azure App Service + PostgreSQL hosting | ~$3K |
-| **Added**: Gemini API calls (RAG + assistant queries) | ~$2K |
-| **Net annualised saving** | **~$170K** |
+| Eliminated, Planview Enterprise One licence | around $100K |
+| Eliminated, Smartsheet PMO subscription, replaced by integrated PMO board | around $15K |
+| Eliminated, recovered time on manual spreadsheet maintenance, roughly half an FTE | around $60K |
+| Added, Azure App Service plus PostgreSQL hosting | around $3K |
+| Added, Gemini API calls for RAG and the assistant | around $2K |
+| Net annualised | roughly $170K saved per year |
 
-That's after one engineer-year of build. The build was me, in evenings
-and weekends — Ardoq was being paid for during that time anyway, so
-there was no double-spend on the way. The team was running on Ardoq
-+ spreadsheets while Meridian was being shaped.
+The build itself was me, in evenings and weekends. Planview was being
+paid for during that period regardless, so the build did not introduce
+double-spend on the way through. The team was running on Planview plus
+spreadsheets while Meridian was being shaped and is now switching over.
 
-## The bits I'd do differently
+## What I would do differently
 
-A few. Cleanly:
+Two things, honestly.
 
-1. **I should have started with the assistant.** I built the data model
-   first and bolted the assistant on at the end. The right order would
-   have been: define the questions stakeholders actually want answered,
-   work backwards to the minimum data shape that answers them, then
-   build the UI. The product would have shipped faster and I'd have
-   wasted less time on data attributes nobody queries.
-2. **I underestimated the governance side.** CAVAS turned out to be the
-   most-used surface — every new vendor or app comes through it — and I
-   under-invested in its UX in the first cut. I rebuilt that part once.
-3. **I should have written more architecture decision records (ADRs)
-   *as code-level decisions*, not just enterprise-level decisions.**
-   Mixing capital-A architecture with codebase architecture in one ADR
-   stream made retrieval messy. Two streams now.
+The first is that I should have started with the assistant rather than
+ending with it. I built the data model first and bolted the assistant
+on at the end. The right order would have been to define the questions
+stakeholders actually want answered, work backwards to the minimum data
+shape that answers them, and only then build the user interface. The
+product would have shipped sooner and I would have spent less time on
+data attributes nobody queries.
 
-## Why this matters for AI-engineering practice
+The second is that I should have taken CAVAS into the Meridian codebase
+from the start, rather than building it standalone and migrating
+afterwards. The migration went smoothly enough, but in retrospect the
+right call would have been to commit to the unified codebase the
+moment it was clear the data models overlapped, which was within a few
+weeks. I lost two or three weekends I did not need to lose to the
+migration.
 
-Meridian is not "AI-augmented" in the loose sense. It's AI-native by
-intent: the data model assumes the assistant is the primary interface
-for most users, so attribute design, taxonomy choices and governance
-schemas are shaped by what the LLM needs to retrieve cleanly under
-RAG, not just what fits in a relational schema. A few specific
-practices that I'd carry into any equivalent build:
+## Why this matters beyond Sonnedix
 
-- **Tight, deterministic source-of-truth for retrieval.** No
-  free-text fields where a structured one would do. Every fact the
-  assistant might cite has a stable URL inside Meridian.
-- **Prompt caching on the system prompt.** A non-trivial chunk of
-  the corpus (capability glossary, value-stream definitions, app
-  schema description) is identical across queries. Cache it.
-- **Cost discipline as architecture, not an afterthought.** The
+Meridian is not "AI-augmented" in the loose sense, where someone has
+added a copilot to an existing product. It is AI-native by intent. The
+data model assumes the assistant is the primary interface for most
+users, so attribute design, taxonomy choices and governance schemas
+are shaped by what the language model needs to retrieve cleanly under
+RAG, not just by what fits in a relational schema.
+
+A few specific practices I would carry into any equivalent build, not
+just an EA platform:
+
+- Tight, deterministic source of truth for retrieval. No free-text
+  fields where a structured one would do. Every fact the assistant
+  might cite has a stable URL inside Meridian.
+- Prompt caching on the system prompt. A non-trivial chunk of the
+  corpus, including the capability glossary, the value stream
+  definitions and the application schema description, is identical
+  across queries. Cache it.
+- Cost discipline as architecture, rather than an afterthought. The
   assistant has hard wall-clock and token limits per query, with a
   daily budget that an admin can see.
-- **Audit-grade transparency.** Every assistant response carries
-  the IDs of the records it consulted. Click through, verify. No
-  trust-by-default of anything LLM-generated.
+- Audit-grade transparency. Every assistant response carries the IDs
+  of the records it consulted. Click through and verify. No
+  trust-by-default of anything the model has generated.
 
-If you're trying to ship AI-native enterprise systems in regulated or
-financially material contexts, those four practices are non-optional.
-They're how you go from a demo to something a CDO or auditor will
-sign off on.
+If you are trying to ship AI-native enterprise systems in regulated or
+financially material contexts, those four practices are not optional.
+They are how you get from a demo to something a CDO or an auditor
+will sign off on.
 
 ## Status
 
-Meridian is live and is the single source of truth for Sonnedix EA.
-Application count under structured governance: ~120 apps across 6
-domains. Stakeholders include the CDO, the CIO, the Head of Finance
-Systems, and the Architecture Governance Board itself.
+Meridian is rolling out across Sonnedix in 2026. CANVAS, which I
+built first as a separate product and then folded into Meridian, is
+the most-active surface during the rollout. The application portfolio
+is around 120 apps across six domains, all with structured attributes,
+all governed through the AGB in the same tool. The list of designed
+stakeholders is the SLT and their direct lieutenants.
 
 If any of this is useful in your own context, my contact details are
 in the footer.
