@@ -25,8 +25,8 @@ The market for these is well established
 [Bizzdesign](https://bizzdesign.com/),
 [MEGA HOPEX](https://www.mega.com/en/product/hopex),
 [Software AG Alfabet](https://www.softwareag.com/en_corporate/platform/alfabet.html)),
-and at Aviva I had run an architecture function with enough people to
-absorb the operational tax that comes with one of these tools.
+and at Aviva I had run an architecture governance function with enough
+people to absorb the operational tax that comes with one of these tools.
 
 So at Sonnedix I tried two things in sequence. In the first year I built
 the whole architecture corpus in Smartsheet (the application portfolio,
@@ -43,15 +43,15 @@ I built instead.
 ## A brief detour about Aviva, because the comparison matters
 
 At Aviva, [Avolution ABACUS](https://www.avolutionsoftware.com/) was
-already in place when I arrived. It is a perfectly good product, but the
-working view in the architecture function was that we needed something
-better integrated with our portfolio governance. I ran a formal request
-for proposal across the major vendors, scored each on capability fit,
-integration story and total cost of ownership over five years, and
-selected [Planview Enterprise One](https://www.planview.com/products/enterprise-one/).
-It was the right answer for Aviva. We had the team to maintain the
-meta-model, the taxonomy governance, the role-based views and the
-integration into PMO data. It paid back.
+already in place when I arrived. It is a perfectly good product, but my
+view was that we needed something better integrated with our portfolio
+governance. I ran a formal request for proposal across the major
+vendors, scored each on capability fit, integration story and total cost
+of ownership over five years, and selected
+[Planview Enterprise One](https://www.planview.com/products/enterprise-one/).
+It was the right answer for Aviva at the time. We had the team to
+maintain the meta-model, the taxonomy governance, the role-based views
+and the integration into PMO data. It paid back.
 
 The learning I should have absorbed earlier than I did is that the same
 product is not necessarily the right answer somewhere else. Aviva had
