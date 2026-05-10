@@ -75,6 +75,82 @@ inbox in the morning the new high-score evaluations are there. When I
 click Apply, draft and submit are queued. When I go to bed the nightly
 cron drains the discover queue and dedups duplicates.
 
+<figure class="post-svg">
+<svg viewBox="0 0 820 200" role="img" aria-labelledby="pipe-title pipe-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="pipe-title">Springboard pipeline, end to end</title>
+  <desc id="pipe-desc">Five sequential stages from job discovery through tracking: discover, evaluate, tailor, apply, track. Each stage names the underlying mechanism.</desc>
+  <style>
+    .sb-pipe text { font-family: 'DM Sans', system-ui, sans-serif; }
+    .sb-pipe .box { fill: var(--bg-card); stroke: var(--border); stroke-width: 1.5; }
+    .sb-pipe .label { fill: var(--text); font-size: 14px; font-weight: 600; }
+    .sb-pipe .sub { fill: var(--text-muted); font-size: 11px; }
+    .sb-pipe .arrow { stroke: var(--text-muted); stroke-width: 1.5; fill: none; }
+    .sb-pipe .head { fill: var(--text-muted); }
+    .sb-pipe .num { fill: var(--accent-1); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+    .sb-pipe .frame { fill: var(--accent-1-soft); }
+  </style>
+  <g class="sb-pipe">
+    <!-- 5 stages, centers at x = 80, 230, 380, 530, 680 -->
+    <!-- Stage 1: Discover -->
+    <rect class="box" x="25" y="65" width="110" height="80" rx="8"/>
+    <text class="num"   x="80" y="86"  text-anchor="middle">1 · DISCOVER</text>
+    <text class="label" x="80" y="110" text-anchor="middle">~10 sources</text>
+    <text class="sub"   x="80" y="128" text-anchor="middle">cron pull</text>
+    <text class="sub"   x="80" y="142" text-anchor="middle">+ dedup</text>
+    <!-- Stage 2: Evaluate -->
+    <rect class="box" x="175" y="65" width="110" height="80" rx="8"/>
+    <text class="num"   x="230" y="86"  text-anchor="middle">2 · EVALUATE</text>
+    <text class="label" x="230" y="110" text-anchor="middle">6-block rubric</text>
+    <text class="sub"   x="230" y="128" text-anchor="middle">Gemini 2.5 Pro</text>
+    <text class="sub"   x="230" y="142" text-anchor="middle">score 0–5</text>
+    <!-- Stage 3: Tailor -->
+    <rect class="box" x="325" y="65" width="110" height="80" rx="8"/>
+    <text class="num"   x="380" y="86"  text-anchor="middle">3 · TAILOR</text>
+    <text class="label" x="380" y="110" text-anchor="middle">CV + cover</text>
+    <text class="sub"   x="380" y="128" text-anchor="middle">+ interview</text>
+    <text class="sub"   x="380" y="142" text-anchor="middle">prep brief</text>
+    <!-- Stage 4: Apply -->
+    <rect class="box" x="475" y="65" width="110" height="80" rx="8"/>
+    <text class="num"   x="530" y="86"  text-anchor="middle">4 · APPLY</text>
+    <text class="label" x="530" y="110" text-anchor="middle">5 plans</text>
+    <text class="sub"   x="530" y="128" text-anchor="middle">human approves</text>
+    <text class="sub"   x="530" y="142" text-anchor="middle">final submit</text>
+    <!-- Stage 5: Track -->
+    <rect class="box" x="625" y="65" width="110" height="80" rx="8"/>
+    <text class="num"   x="680" y="86"  text-anchor="middle">5 · TRACK</text>
+    <text class="label" x="680" y="110" text-anchor="middle">CRM + funnel</text>
+    <text class="sub"   x="680" y="128" text-anchor="middle">recruiters,</text>
+    <text class="sub"   x="680" y="142" text-anchor="middle">follow-ups, proofs</text>
+    <!-- Arrows between stages -->
+    <g>
+      <line class="arrow" x1="135" y1="105" x2="170" y2="105"/>
+      <polygon class="head" points="170,101 178,105 170,109"/>
+      <line class="arrow" x1="285" y1="105" x2="320" y2="105"/>
+      <polygon class="head" points="320,101 328,105 320,109"/>
+      <line class="arrow" x1="435" y1="105" x2="470" y2="105"/>
+      <polygon class="head" points="470,101 478,105 470,109"/>
+      <line class="arrow" x1="585" y1="105" x2="620" y2="105"/>
+      <polygon class="head" points="620,101 628,105 620,109"/>
+    </g>
+    <!-- Outputs: notifications fan out from Track -->
+    <text class="sub" x="755" y="80"  text-anchor="start">Telegram</text>
+    <text class="sub" x="755" y="98"  text-anchor="start">Calendar</text>
+    <text class="sub" x="755" y="116" text-anchor="start">Email digest</text>
+    <text class="sub" x="755" y="134" text-anchor="start">In-app inbox</text>
+    <line class="arrow" x1="735" y1="105" x2="750" y2="105"/>
+    <polygon class="head" points="750,101 758,105 750,109"/>
+    <!-- Top header: throttling note -->
+    <text class="sub" x="80"  y="40" text-anchor="middle">Greenhouse, Ashby, Lever,</text>
+    <text class="sub" x="80"  y="54" text-anchor="middle">Workday, Reed, LinkedIn…</text>
+    <line class="arrow" x1="80" y1="58" x2="80" y2="62"/>
+    <polygon class="head" points="76,62 80,70 84,62"/>
+    <!-- Bottom: cost label -->
+    <text class="sub" x="380" y="180" text-anchor="middle" style="font-style: italic;">Total cost across the whole pipeline: ~$4 / month</text>
+  </g>
+</svg>
+<figcaption>The five stages, end to end. Each stage owns a well-defined contract; nothing is auto-submitted at the end.</figcaption>
+</figure>
+
 ## The five plans (and why they are letters, not steps)
 
 The application flow is the bit that gets the most questions, so it is
@@ -139,6 +215,64 @@ No plan auto-submits. They all stop one click short. I review the
 screenshot, click Approve, and only then does the submit-application
 worker fire. That is not a technical limitation, it is a deliberate
 constraint: the human has to be in the loop on the final action.
+
+<figure class="post-svg">
+<svg viewBox="0 0 820 320" role="img" aria-labelledby="plans-title plans-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="plans-title">Five apply plans branching from a single tailored draft</title>
+  <desc id="plans-desc">A central tailored-draft node fans out to five interchangeable plans, each routed to a different category of destination: ATS forms, SPA wizards, manual oversight, ToS-forbidden portals, and login-gated portals.</desc>
+  <style>
+    .sb-plans text { font-family: 'DM Sans', system-ui, sans-serif; }
+    .sb-plans .draft { fill: var(--accent-1-soft); stroke: var(--accent-1); stroke-width: 2; }
+    .sb-plans .plan { fill: var(--bg-card); stroke: var(--border); stroke-width: 1.5; }
+    .sb-plans .draft-label { fill: var(--text); font-size: 14px; font-weight: 700; }
+    .sb-plans .draft-sub { fill: var(--text-soft); font-size: 11px; }
+    .sb-plans .plan-letter { fill: var(--accent-1); font-size: 13px; font-weight: 700; }
+    .sb-plans .plan-name { fill: var(--text); font-size: 12px; font-weight: 600; }
+    .sb-plans .dest { fill: var(--text-muted); font-size: 11px; }
+    .sb-plans .branch { stroke: var(--text-muted); stroke-width: 1.3; fill: none; }
+  </style>
+  <g class="sb-plans">
+    <!-- Tailored draft node, centered left -->
+    <rect class="draft" x="20" y="125" width="170" height="70" rx="10"/>
+    <text class="draft-label" x="105" y="152" text-anchor="middle">Tailored draft</text>
+    <text class="draft-sub"   x="105" y="170" text-anchor="middle">CV · cover · prep</text>
+    <text class="draft-sub"   x="105" y="184" text-anchor="middle">+ candidate profile</text>
+    <!-- 5 plan boxes, x=290..400, y centers at 30, 95, 160, 225, 290 -->
+    <!-- Plan A -->
+    <rect class="plan" x="290" y="10"  width="130" height="40" rx="6"/>
+    <text class="plan-letter" x="305" y="35" text-anchor="start">A</text>
+    <text class="plan-name"   x="325" y="35" text-anchor="start">Generic DOM fill</text>
+    <text class="dest" x="430" y="35" text-anchor="start">Greenhouse · Ashby · Lever · standard Workday</text>
+    <!-- Plan B -->
+    <rect class="plan" x="290" y="75"  width="130" height="40" rx="6"/>
+    <text class="plan-letter" x="305" y="100" text-anchor="start">B</text>
+    <text class="plan-name"   x="325" y="100" text-anchor="start">Computer-use</text>
+    <text class="dest" x="430" y="100" text-anchor="start">Lumesse · multi-step Workday SPAs</text>
+    <!-- Plan C -->
+    <rect class="plan" x="290" y="140" width="130" height="40" rx="6"/>
+    <text class="plan-letter" x="305" y="165" text-anchor="start">C</text>
+    <text class="plan-name"   x="325" y="165" text-anchor="start">Side panel</text>
+    <text class="dest" x="430" y="165" text-anchor="start">Claude in Chrome — full human oversight</text>
+    <!-- Plan D -->
+    <rect class="plan" x="290" y="205" width="130" height="40" rx="6"/>
+    <text class="plan-letter" x="305" y="230" text-anchor="start">D</text>
+    <text class="plan-name"   x="325" y="230" text-anchor="start">Apply Pack</text>
+    <text class="dest" x="430" y="230" text-anchor="start">Zip + deeplink — LinkedIn Easy Apply, Reed, Jobserve</text>
+    <!-- Plan E -->
+    <rect class="plan" x="290" y="270" width="130" height="40" rx="6"/>
+    <text class="plan-letter" x="305" y="295" text-anchor="start">E</text>
+    <text class="plan-name"   x="325" y="295" text-anchor="start">Local headed</text>
+    <text class="dest" x="430" y="295" text-anchor="start">Real Chromium on my Mac — Reed, Indeed, LinkedIn login</text>
+    <!-- Fan-out branches from draft right edge (x=190, y=160) to each plan's left edge (x=290, plan_center_y) -->
+    <path class="branch" d="M 190 160 C 240 160, 240 30,  290 30"/>
+    <path class="branch" d="M 190 160 C 240 160, 240 95,  290 95"/>
+    <path class="branch" d="M 190 160 L 290 160"/>
+    <path class="branch" d="M 190 160 C 240 160, 240 225, 290 225"/>
+    <path class="branch" d="M 190 160 C 240 160, 240 290, 290 290"/>
+  </g>
+</svg>
+<figcaption>The five plans are alternatives, not stages. Same tailored draft, same candidate profile, different driver. Switching plans on a job is a button click.</figcaption>
+</figure>
 
 ## The stack
 
@@ -211,9 +345,52 @@ is the difference between fifteen dollars a month and four.
 Long-running workers (Plan A apply, computer-use, evaluation) write
 named step records into a JSONB column on the `worker_runs` table.
 A live-status panel on the job detail page polls that column every
-two seconds. The user sees `started → generating_draft → built_pdfs →
-launching_browser → navigating → fields_filled → completed` as it
-happens, including the LLM cost per step.
+two seconds. The user sees the seven steps below stream past as the
+worker progresses, including the LLM cost per step.
+
+<figure class="post-svg">
+<svg viewBox="0 0 820 130" role="img" aria-labelledby="steps-title steps-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="steps-title">Worker step timeline</title>
+  <desc id="steps-desc">Seven named steps stream through worker_runs.payload.steps from started, through generating draft, building PDFs, launching browser, navigating, filling fields, to completed.</desc>
+  <style>
+    .sb-steps text { font-family: 'DM Sans', system-ui, sans-serif; }
+    .sb-steps .rail { stroke: var(--border); stroke-width: 2; }
+    .sb-steps .rail-active { stroke: var(--accent-1); stroke-width: 2; }
+    .sb-steps .dot { fill: var(--accent-1); }
+    .sb-steps .dot-ring { fill: var(--bg-card); stroke: var(--accent-1); stroke-width: 2; }
+    .sb-steps .label { fill: var(--text); font-size: 11.5px; font-weight: 600; }
+    .sb-steps .sub { fill: var(--text-muted); font-size: 10px; }
+  </style>
+  <g class="sb-steps">
+    <!-- 7 dots at x = 60, 180, 300, 420, 540, 660, 760 (centers); y=50 -->
+    <line class="rail-active" x1="60" y1="50" x2="660" y2="50"/>
+    <line class="rail"        x1="660" y1="50" x2="760" y2="50"/>
+    <!-- dots -->
+    <circle class="dot" cx="60"  cy="50" r="7"/>
+    <circle class="dot" cx="180" cy="50" r="7"/>
+    <circle class="dot" cx="300" cy="50" r="7"/>
+    <circle class="dot" cx="420" cy="50" r="7"/>
+    <circle class="dot" cx="540" cy="50" r="7"/>
+    <circle class="dot-ring" cx="660" cy="50" r="7"/>
+    <circle class="dot-ring" cx="760" cy="50" r="7"/>
+    <!-- labels -->
+    <text class="label" x="60"  y="86"  text-anchor="middle">started</text>
+    <text class="label" x="180" y="86"  text-anchor="middle">generating</text>
+    <text class="sub"   x="180" y="100" text-anchor="middle">draft</text>
+    <text class="label" x="300" y="86"  text-anchor="middle">built</text>
+    <text class="sub"   x="300" y="100" text-anchor="middle">PDFs</text>
+    <text class="label" x="420" y="86"  text-anchor="middle">launching</text>
+    <text class="sub"   x="420" y="100" text-anchor="middle">browser</text>
+    <text class="label" x="540" y="86"  text-anchor="middle">navigating</text>
+    <text class="label" x="660" y="86"  text-anchor="middle">fields</text>
+    <text class="sub"   x="660" y="100" text-anchor="middle">filled</text>
+    <text class="label" x="760" y="86"  text-anchor="middle">completed</text>
+    <!-- caption above: showing the live state -->
+    <text class="sub" x="60"  y="28" text-anchor="start">Live status panel polls worker_runs.payload.steps every two seconds:</text>
+  </g>
+</svg>
+<figcaption>The same seven steps stream past whether you watch a Plan A apply, an evaluation, or a computer-use run. The first version of this worker just wrote <code>status='running'</code>; the difference in user-confidence between that and this is large.</figcaption>
+</figure>
 
 **Soft delete with a dedicated trash view and auto-clean.** Nothing
 is hard deleted from the UI. Every "remove" sets `deleted_at = now()`.
