@@ -4,7 +4,18 @@ slug: case-study-meridian
 date: 2026-05-09
 excerpt: "Why a small architecture team at Sonnedix is replacing commercial EA tooling with a system I designed and built myself, including the Central Application and Vendor Approval System (CAVAS), and what the trade-offs were along the way."
 source: own
+draft: true
 ---
+
+<!--
+  Hidden 2026-05-10. The draft flag removes the post from collections.posts
+  so it doesn't appear in /blog/ or the RSS feed. The file is also listed
+  in .eleventyignore so Eleventy doesn't render the standalone page at
+  /blog/case-study-meridian/ — that URL now 404s. The markdown is preserved
+  in source control: to restore, remove the .eleventyignore entry AND the
+  draft flag above.
+-->
+
 
 ## TL;DR
 
@@ -79,22 +90,32 @@ It was the right answer for Aviva at the time. We had the team to
 maintain the meta-model, the taxonomy governance, the role-based views
 and the integration into PMO data. It paid back.
 
-The learning I should have absorbed earlier than I did is that the same
-product is not necessarily the right answer somewhere else. Aviva had
-the operational headcount. Sonnedix did not.
+The learning I picked up at Sonnedix, and had not needed to confront at
+Aviva, is that an EA platform on its own can be the right answer in one
+place and not enough in another. Aviva had the operational headcount to
+absorb a dedicated EA platform and the bench to keep the threads to
+PMO, procurement and legal connected by hand. Sonnedix did not, and
+that gap turned out to matter more than which platform we picked.
 
-## The Ardoq problem at Sonnedix
+## Where an EA platform stops being enough
 
-Even the simplest enterprise EA management tool has a steep operational
-overhead. Schemas to maintain, reference data to keep clean, user roles
-to provision, integrations to keep up. At Sonnedix the architecture team
-was small. We tried for the better part of a year to bring Ardoq up to a
-quality threshold where stakeholders would trust the data, and we never
-got there. Some of the apps were in Ardoq, some were in spreadsheets,
-some were still in Smartsheet, and the rationalisation was that "we are
-migrating", which is the worst of both worlds: we were paying for a tool
-we were not yet getting the benefit from, while also still maintaining
-the workarounds it was supposed to replace.
+A note on Ardoq before any of the rest. It is a genuinely good product.
+The pre-sales engagement was thorough, the post-sales team gave us real
+attention through onboarding and into operation, and bringing it in at
+the start of year two was the right call given what we knew at the
+time. None of what follows is a criticism of the vendor. The story is
+about what an EA platform by design does and does not cover, and what
+that means when the team running it is small.
+
+Every commercial EA tool has an operational floor. Schemas to maintain,
+reference data to keep clean, user roles to provision, integrations to
+keep up to date. At Sonnedix the architecture team was small. We spent
+the better part of a year working to bring the content up to the
+quality threshold where stakeholders would trust it as a single source.
+Some of the apps were in Ardoq, some were in spreadsheets, some were
+still in Smartsheet, and the holding line was always "we are
+migrating", which is the worst of both worlds: paying for the tool
+while still running the workarounds it was meant to replace.
 
 The other thing I had not appreciated about commercial EA tools when
 the team is small is what they explicitly don't cover. They are

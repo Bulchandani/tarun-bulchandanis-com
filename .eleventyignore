@@ -13,3 +13,7 @@ src/**
 wrangler.jsonc
 # Studio is the Decap CMS UI — copied through verbatim, not templated
 studio/**
+# Hidden blog posts. Listed here so Eleventy doesn't render the standalone
+# page (the URL would otherwise still work even with draft: true). Restore
+# by removing this line AND the draft flag in the frontmatter.
+blog/posts/2026-05-09-case-study-meridian.md
