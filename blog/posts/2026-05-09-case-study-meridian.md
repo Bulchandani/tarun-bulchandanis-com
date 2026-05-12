@@ -2,7 +2,7 @@
 title: "Meridian: building the EA platform we couldn't buy"
 slug: case-study-meridian
 date: 2026-05-09
-excerpt: "Why a small architecture team replaced commercial EA tooling with a system I designed and built myself, including the in-house approval workflow (CAVAS), and what the trade-offs were along the way."
+excerpt: "Why a small architecture team replaced commercial EA tooling with a system I designed and built myself, including the in-house approval workflow (CANVAS), and what the trade-offs were along the way."
 source: own
 ---
 
@@ -20,7 +20,7 @@ spends its time. Year three I dropped the commercial tool and built
 Meridian myself, in evenings and weekends. It is a Next.js 15 plus
 FastAPI plus PostgreSQL plus Microsoft Entra ID plus Gemini AI assistant
 platform, with the Central Application and Vendor Approval System
-(CAVAS, which I designed and named) folded in as the workflow surface.
+(CANVAS, which I designed and named) folded in as the workflow surface.
 Rolling out across the company in 2026, designed for the senior
 leadership team and their direct lieutenants. Roughly $170K per year
 saved at steady state. The biggest win is the conversational assistant
@@ -145,7 +145,7 @@ What I needed:
   than off in another system. This is the bit a commercial EA platform
   cannot do.
 - A governance workflow, which I will describe properly below, called
-  CAVAS (the Central Application and Vendor Approval System, which is
+  CANVAS (the Central Application and Vendor Approval System, which is
   what I named it).
 - A single query-able pane of glass so the question "which Commercial
   domain apps touch customer PII and have a contract renewal due
@@ -177,9 +177,9 @@ in the Next.js process, and its security model (token-scoped access,
 request rate limits, explicit per-route auth) is easier to reason
 about for the things that need to be reasoned about clearly.
 
-## CAVAS, which is now part of Meridian
+## CANVAS, which is now part of Meridian
 
-CAVAS, the Central Application and Vendor Approval System, was
+CANVAS, the Central Application and Vendor Approval System, was
 originally a standalone application. I built it first, as a separate
 codebase, because the governance workflow was the most painful gap in
 our day-to-day operation. New apps and new vendors were being
@@ -189,7 +189,7 @@ spreadsheet for the technical risk assessment, a Word document for
 the vendor screening results, a meeting for the AGB sign off. The
 audit trail was whatever people remembered to put in a folder.
 
-CAVAS as a standalone product solved that. A request comes in, the
+CANVAS as a standalone product solved that. A request comes in, the
 data privacy impact assessment runs against the right template, the
 technical risk assessment against another, the vendor screen pulls
 from the relevant sanctions and counterparty data sources, and the
@@ -197,20 +197,20 @@ Architecture Governance Board sees the whole package in one view
 when it comes time to sign off. Every stage has explicit owners,
 explicit timeouts, and explicit escalation.
 
-After about three months of CAVAS running alongside Meridian, it
+After about three months of CANVAS running alongside Meridian, it
 became obvious that the two should be one product. They were sharing
 a data model anyway (you cannot do governance against an application
 that does not exist yet in the portfolio, and you cannot run the
 portfolio without an audit trail of how each app got there). The
-migration was a deliberate exercise: move CAVAS into the Meridian
+migration was a deliberate exercise: move CANVAS into the Meridian
 codebase, share the Prisma schema, share the Entra ID auth, share
-the Gemini assistant so that questions like "which open CAVAS
+the Gemini assistant so that questions like "which open CANVAS
 requests are blocked on a vendor screen" can be answered in the same
 pane as "show me all Commercial domain apps". I did the migration
 over a series of weekends in early 2026 and it has paid for itself
 already in maintenance time saved.
 
-CAVAS now sits inside Meridian as a first-class surface. When this
+CANVAS now sits inside Meridian as a first-class surface. When this
 goes fully live, the application and vendor onboarding flow will be
 one continuous, auditable, searchable system instead of half a dozen
 disconnected ones, and the AGB will see a complete request from
@@ -222,7 +222,7 @@ Auditability was a deliberate design constraint from day one. I was
 not going to ship a system that I could not explain to General
 Counsel or the Chief Compliance Officer if they asked. So:
 
-- Every edit to a portfolio record, capability, value stream or CAVAS
+- Every edit to a portfolio record, capability, value stream or CANVAS
   request is captured with the user identity, the timestamp, the
   before and after values, and the reason text the user provided.
 - Every login is logged, including the SSO claims that were validated
@@ -230,7 +230,7 @@ Counsel or the Chief Compliance Officer if they asked. So:
 - Every assistant query is logged with the question, the records the
   assistant retrieved, and the response text, so a regulator can ask
   "what did this tool tell me on March 12" and we have the answer.
-- Every CAVAS approval has an immutable record of who signed off,
+- Every CANVAS approval has an immutable record of who signed off,
   what they saw at the time of sign off, and what changed afterwards
   (the system shows you "the data has changed since this approval"
   when relevant).
@@ -252,7 +252,7 @@ had EBITDA-impacting capability dependencies, the answer involved a
 spreadsheet filter, a pivot, a question to me, and me running the
 actual analysis. Meridian gives them a chat box. The assistant has
 read access to the full architecture corpus (apps, capabilities,
-value streams, PMO initiatives, CAVAS records) and returns a
+value streams, PMO initiatives, CANVAS records) and returns a
 structured answer with citations to the underlying records. There is
 RAG with a tightly scoped corpus, prompt-cached system context, and
 guardrails that prevent it from inventing apps or capabilities that
@@ -307,7 +307,7 @@ data shape that answers them, and only then build the user interface.
 The product would have shipped sooner and I would have spent less
 time on data attributes nobody queries.
 
-The second is that I should have taken CAVAS into the Meridian
+The second is that I should have taken CANVAS into the Meridian
 codebase from the start, rather than building it standalone and
 migrating afterwards. The migration went smoothly enough, but in
 retrospect the right call would have been to commit to the unified
@@ -348,7 +348,7 @@ auditor will sign off on.
 
 ## Status
 
-Meridian is rolling out across the company in 2026. CAVAS, which I
+Meridian is rolling out across the company in 2026. CANVAS, which I
 built first as a separate product and then folded into Meridian, is
 the most-active surface during the rollout. The application portfolio
 is around 120 apps across six domains, all with structured attributes,

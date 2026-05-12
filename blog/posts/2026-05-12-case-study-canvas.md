@@ -475,7 +475,7 @@ operational fiction.
 
 In April I moved CANVAS into the Meridian codebase. Shared Prisma
 schema, shared Entra ID auth, shared Gemini assistant so that
-questions like "which open CAVAS requests are blocked on a vendor
+questions like "which open CANVAS requests are blocked on a vendor
 screen" can be answered in the same pane as "show me all Commercial
 domain apps". The cost of running it as a separate product had been
 operationally invisible at first and gradually became obvious.
@@ -489,7 +489,7 @@ CANVAS now sits inside Meridian as a first-class surface. The
 application and vendor onboarding flow is one continuous, auditable,
 searchable system. The AGB sees a complete request from inside the
 same tool the architects already use. The architects can ask the
-conversational assistant questions about CAVAS requests in the same
+conversational assistant questions about CANVAS requests in the same
 chat as questions about the portfolio. Twelve months ago this was
 six disconnected systems with a SharePoint folder at the end.
 
