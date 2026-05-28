@@ -178,6 +178,20 @@ The [diagnostic engagement](/services/energy/) takes two
 weeks and gives a defensible picture of the priority
 order.
 
+## AI-led products under this pillar
+
+The five deliverables above are also available as
+AI-led products that ship as working systems rather
+than engagements:
+
+- **Forecast.** AI-led hourly demand forecasting.
+- **Execute.** Agent-mediated execution across OMIE,
+  MIBEL, MEFF and GdO.
+- **Margin.** Real-time guarantee monitoring.
+- **Reconcile.** AI-led invoice reconciliation.
+
+[Read the purchasing products page →](/services/energy/products/purchasing/)
+
 ## Related pillars
 
 - [Operational management](/services/energy/operations/):

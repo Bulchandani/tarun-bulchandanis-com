@@ -169,6 +169,26 @@ product line losing money, a new launch upcoming, a
 regulatory change forcing a tariff re-design), pricing
 design is the right starting point.
 
+## AI-led products under this pillar
+
+The five deliverables above are also available as
+AI-led products that ship as working systems rather
+than engagements:
+
+- **Price.** AI-augmented pricing platform with full
+  scenario engine.
+- **Brief.** AI-generated weekly market briefing and
+  monthly outlook.
+- **Board.** Analytics platform integrating customer,
+  purchasing, regulatory and financial data.
+- **Radar.** Regulatory monitoring agent covering the
+  six regulatory sources.
+- **Report.** Bespoke AI reporting for PE covenant
+  packs, sustainability-linked loan reporting and
+  counterparty credit committees.
+
+[Read the analytics products page →](/services/energy/products/analysis/)
+
 ## Related pillars
 
 - [Energy purchasing](/services/energy/purchasing/):

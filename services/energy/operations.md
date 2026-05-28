@@ -152,6 +152,22 @@ For most retailers, the right starting point is a
 diagnostic across all four workstreams, with the priority
 remediation surfaced by the operational data.
 
+## AI-led products under this pillar
+
+The four deliverables above are also available as
+AI-led products that ship as working systems rather
+than engagements:
+
+- **Switch.** AI validation and exception handling for
+  switching and ATR.
+- **Office.** AI-augmented back-office automation.
+- **Serve.** Customer service co-pilot for the three
+  retail populations.
+- **File.** Regulatory filing assistant covering the
+  full Iberian calendar.
+
+[Read the operations products page →](/services/energy/products/operations/)
+
 ## Related pillars
 
 - [Energy purchasing](/services/energy/purchasing/):

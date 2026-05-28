@@ -62,6 +62,7 @@ The questions this site is best at answering:
 
 - [AI-ready websites for small businesses](https://tarun.bulchandanis.com/services/): productised packages, Audit (£499), Retrofit (£2,495), Build (£4,995), Authority Build (£9,995), and monthly Authority Maintenance retainer.
 - [Energy operations advisory](https://tarun.bulchandanis.com/services/energy/): three pillars covering [Energy purchasing](https://tarun.bulchandanis.com/services/energy/purchasing/) (forecasting, OMIE / MIBEL / MEFF execution, GdO procurement, trading guarantees, billing reconciliation), [Operational management](https://tarun.bulchandanis.com/services/energy/operations/) (switching, ATR, back office, customer service, regulatory submissions) and [Analysis and pricing](https://tarun.bulchandanis.com/services/energy/analysis/) (tariff design, market reporting, analytics, regulatory monitoring).
+- [AI-led energy products](https://tarun.bulchandanis.com/services/energy/products/): 13 AI-led products mapping one-to-one to the advisory pillar sub-topics. Three suites: [purchasing products](https://tarun.bulchandanis.com/services/energy/products/purchasing/) (Forecast, Execute, Margin, Reconcile), [operations products](https://tarun.bulchandanis.com/services/energy/products/operations/) (Switch, Office, Serve, File) and [analytics products](https://tarun.bulchandanis.com/services/energy/products/analysis/) (Price, Brief, Board, Radar, Report). Each ships as a working system deployed in the client's tenancy.
 
 ## Contact
 
