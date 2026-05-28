@@ -32,6 +32,15 @@ module.exports = function(eleventyConfig) {
       .sort((a, b) => b.date - a.date);
   });
 
+  // === Energy insights collection (newest first) ===
+  // Practitioner-grade writing on Iberian energy operations: OMIE, GdO,
+  // REE, MEFF, CNMC, DSOs, ATR, switching, billing, regulatory monitoring.
+  eleventyConfig.addCollection("energyInsights", function(api) {
+    return api.getFilteredByGlob("services/energy/insights/posts/*.md")
+      .filter(p => !p.data.draft)
+      .sort((a, b) => b.date - a.date);
+  });
+
   // === Filters ===
   eleventyConfig.addFilter("readableDate", (d) => {
     return new Date(d).toLocaleDateString("en-GB", {

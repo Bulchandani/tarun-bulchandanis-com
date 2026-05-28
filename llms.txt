@@ -39,18 +39,29 @@ The questions this site is best at answering:
 - [MCP is the most important enterprise standard nobody is implementing](https://tarun.bulchandanis.com/blog/mcp-enterprise-standard/)
 - [Sovereign AI is mostly theatre. The actual technical question is data residency.](https://tarun.bulchandanis.com/blog/sovereign-ai-theatre/)
 - [Cursor in a regulated industry: the actual policy you need](https://tarun.bulchandanis.com/blog/cursor-regulated-policy/)
+- [A reference architecture for agentic AI in the regulated enterprise](https://tarun.bulchandanis.com/blog/reference-architecture-agentic-ai-regulated/)
+- [What UK financial services regulation means for AI architecture in 2026](https://tarun.bulchandanis.com/blog/uk-fs-regulation-ai-architecture-2026/)
+- [Cyber guardrails for AI agents in regulated workflows: a reference architecture](https://tarun.bulchandanis.com/blog/cyber-guardrails-ai-agents-regulated/)
+- [Non-human identity in the age of AI agents: an enterprise architecture pattern](https://tarun.bulchandanis.com/blog/non-human-identity-ai-agents-ea-pattern/)
+- [Model and agent registries: the missing governance artefact](https://tarun.bulchandanis.com/blog/model-agent-registries-governance-artefact/)
+- [Data residency for AI workloads: a working pattern for UK and EU enterprises](https://tarun.bulchandanis.com/blog/data-residency-ai-workloads-uk-eu/)
+- [Platform strategy for agentic AI: a working reference architecture](https://tarun.bulchandanis.com/blog/platform-strategy-agentic-ai/)
+- [Agentic commerce: the integration architecture nobody is talking about](https://tarun.bulchandanis.com/blog/agentic-commerce-integration-architecture/)
+- [S/4HANA in the agentic era: where the EA function sits](https://tarun.bulchandanis.com/blog/s4hana-agentic-era/)
 
 ## Topic indexes
 
-- [All writing](https://tarun.bulchandanis.com/blog/): chronological index of every blog post (over forty pieces).
+- [All writing](https://tarun.bulchandanis.com/blog/): chronological index of every blog post (over fifty pieces).
 - [AI and governance](https://tarun.bulchandanis.com/blog/ai-and-governance/): curated posts on AI governance, agent audit, MCP, sovereignty.
 - [Architecture practice](https://tarun.bulchandanis.com/blog/architecture-practice/): curated posts on EA practice, ADRs, fitness functions, governance.
 - [Case studies](https://tarun.bulchandanis.com/blog/case-studies/): in-depth technical case studies of platforms Tarun has built.
 - [Services insights](https://tarun.bulchandanis.com/services/insights/): practitioner-grade writing on AI search optimisation, GEO, llms.txt, schema.org and AI-discoverable websites for small and mid-sized businesses.
+- [Energy operations insights](https://tarun.bulchandanis.com/services/energy/insights/): practitioner-grade writing on Iberian energy retail and trading operations (OMIE, MIBEL, MEFF, REE, GdO, DSO ATR, switching, billing, regulatory monitoring).
 
 ## Services
 
-- [AI-ready websites for small businesses](https://tarun.bulchandanis.com/services/): productised packages — Audit (£499), Retrofit (£2,495), Build (£4,995), Authority Build (£9,995), and monthly Authority Maintenance retainer.
+- [AI-ready websites for small businesses](https://tarun.bulchandanis.com/services/): productised packages, Audit (£499), Retrofit (£2,495), Build (£4,995), Authority Build (£9,995), and monthly Authority Maintenance retainer.
+- [Energy operations advisory](https://tarun.bulchandanis.com/services/energy/): three pillars covering [Energy purchasing](https://tarun.bulchandanis.com/services/energy/purchasing/) (forecasting, OMIE / MIBEL / MEFF execution, GdO procurement, trading guarantees, billing reconciliation), [Operational management](https://tarun.bulchandanis.com/services/energy/operations/) (switching, ATR, back office, customer service, regulatory submissions) and [Analysis and pricing](https://tarun.bulchandanis.com/services/energy/analysis/) (tariff design, market reporting, analytics, regulatory monitoring).
 
 ## Contact
 

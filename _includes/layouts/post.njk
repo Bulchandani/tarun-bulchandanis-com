@@ -33,8 +33,16 @@ ogType: article
 }
 </script>
 
-{%- set _backHref = "/services/insights/" if section == "services-insights" else "/blog/" -%}
-{%- set _backLabel = "All insights" if section == "services-insights" else "All writing" -%}
+{%- if section == "services-insights" -%}
+  {%- set _backHref = "/services/insights/" -%}
+  {%- set _backLabel = "All insights" -%}
+{%- elif section == "energy-insights" -%}
+  {%- set _backHref = "/services/energy/insights/" -%}
+  {%- set _backLabel = "All energy insights" -%}
+{%- else -%}
+  {%- set _backHref = "/blog/" -%}
+  {%- set _backLabel = "All writing" -%}
+{%- endif -%}
 <article class="post">
   <div class="container container--narrow">
     <a class="post-back" href="{{ _backHref }}">← {{ _backLabel }}</a>
