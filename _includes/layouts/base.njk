@@ -25,11 +25,71 @@
   <meta property="og:url" content="https://tarun.bulchandanis.com{{ page.url }}">
   {% if image %}<meta property="og:image" content="{{ image }}">{% endif %}
 
+  <link rel="canonical" href="https://tarun.bulchandanis.com{{ page.url }}">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/blog/blog.css">
   <link rel="alternate" type="application/atom+xml" title="Tarun Bulchandani — Writing" href="/blog/feed.xml">
+
+  {# === Structured data for search engines and AI assistants === #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://tarun.bulchandanis.com/#website",
+    "url": "https://tarun.bulchandanis.com/",
+    "name": "Tarun Bulchandani",
+    "description": "Senior architecture leader. Building AI-native enterprise systems and large-scale transformation.",
+    "publisher": { "@id": "https://tarun.bulchandanis.com/#person" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://tarun.bulchandanis.com/#person",
+    "name": "Tarun Bulchandani",
+    "url": "https://tarun.bulchandanis.com/",
+    "image": "https://tarun.bulchandanis.com/assets/headshot.jpg",
+    "jobTitle": "Senior Architecture Leader",
+    "description": "Senior architecture leader specialising in enterprise architecture, AI-native enterprise systems, and large-scale transformation. London, UK.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "London",
+      "addressCountry": "GB"
+    },
+    "knowsAbout": [
+      "Enterprise Architecture",
+      "AI Governance",
+      "Generative AI",
+      "AI Agents",
+      "Architecture Decision Records",
+      "Model Context Protocol",
+      "S/4HANA",
+      "SAP",
+      "Salesforce",
+      "Microsoft Entra ID",
+      "Cloud Architecture",
+      "Identity-First Security",
+      "Architecture Governance",
+      "Enterprise Architecture Governance",
+      "Digital Transformation",
+      "Data Residency",
+      "Sovereign AI",
+      "TOGAF"
+    ],
+    "alumniOf": [
+      { "@type": "Organization", "name": "Aviva" },
+      { "@type": "Organization", "name": "Nestlé" }
+    ],
+    "sameAs": [
+      "https://www.linkedin.com/in/tarunbulchandani/",
+      "https://github.com/Bulchandani"
+    ]
+  }
+  </script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>

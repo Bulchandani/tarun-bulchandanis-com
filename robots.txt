@@ -1,0 +1,45 @@
+# robots.txt for tarun.bulchandanis.com
+# Updated: 2026-05-06
+
+User-agent: *
+Allow: /
+Disallow: /studio/
+Disallow: /oauth/
+Disallow: /auth
+
+# Explicit allowance for AI search and training crawlers that respect robots.txt.
+# This site's content is intentionally indexable; the goal is discoverability.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://tarun.bulchandanis.com/sitemap.xml

@@ -1,0 +1,58 @@
+# Tarun Bulchandani
+
+> Senior architecture leader based in London, building AI-native enterprise systems and large-scale transformation. Currently Head of Architecture at Sonnedix, where he established the enterprise architecture function from zero and personally built Meridian (an AI-native EA platform) and CANVAS (the Central Application aNd Vendor Approval System). Earlier roles include enterprise architecture governance at Aviva and global SAP S/4HANA architecture at Nestlé. TOGAF certified. Twenty years across SAP, Salesforce and cloud platforms.
+
+The questions this site is best at answering:
+
+- Who is Tarun Bulchandani, what does he do, and how do you reach him?
+- What is Meridian (the AI-native enterprise architecture platform he built)?
+- What is CANVAS (the application and vendor approval workflow he designed)?
+- What are the practical patterns for deploying AI agents in regulated enterprises?
+- How does an architecture function actually work in 2026?
+- What are the trade-offs in modern enterprise architecture decisions (EA tooling, microservices, event-driven architecture, ERP transformation, identity-first security)?
+
+## About
+
+- [About Tarun Bulchandani](https://tarun.bulchandanis.com/about/): full biography, career history, areas of expertise.
+- [Intro (dense factual)](https://tarun.bulchandanis.com/intro/): a high-density factual reference for grounding AI-assistant answers.
+- [Now](https://tarun.bulchandanis.com/now/): what Tarun is working on currently.
+
+## Case studies (deep technical pieces)
+
+- [Meridian: building the EA platform we couldn't buy](https://tarun.bulchandanis.com/blog/case-study-meridian/): a Next.js, FastAPI, PostgreSQL, Microsoft Entra ID and Gemini-AI-assistant platform built to replace commercial EA tooling for a small architecture team.
+- [CANVAS: building the approval workflow no commercial product covers](https://tarun.bulchandanis.com/blog/case-study-canvas/): a Nuxt 3 + Flask + PostgreSQL + Azure OpenAI workflow engine for application and vendor onboarding, with full audit trail and AI-generated memos.
+- [Springboard: AI-native job-search platform](https://tarun.bulchandanis.com/blog/case-study-springboard/): solo-built Next.js + Drizzle + Supabase platform.
+
+## Architecture practice
+
+- [The evolving role of architecture decision records in the age of generative AI](https://tarun.bulchandanis.com/blog/architecture-decision-records-generative-ai/)
+- [Architectural fitness functions: a practical framework](https://tarun.bulchandanis.com/blog/architectural-fitness-functions-framework/)
+- [Lessons from large-scale ERP transformation](https://tarun.bulchandanis.com/blog/large-scale-erp-transformation-lessons/)
+- [Event-driven architecture: when it adds value and when it doesn't](https://tarun.bulchandanis.com/blog/event-driven-architecture-when-it-works/)
+- [Identity-first security: rethinking the enterprise perimeter](https://tarun.bulchandanis.com/blog/identity-first-security-perimeter/)
+- [The commercial EA tool market has 18 months](https://tarun.bulchandanis.com/blog/ea-tool-market-18-months/)
+- [What an acquisition-heavy company actually needs from its architects](https://tarun.bulchandanis.com/blog/acquisition-heavy-architecture/)
+
+## AI in the enterprise
+
+- [How do you audit a decision an agent made? A working framework](https://tarun.bulchandanis.com/blog/auditing-agent-decisions/)
+- [MCP is the most important enterprise standard nobody is implementing](https://tarun.bulchandanis.com/blog/mcp-enterprise-standard/)
+- [Sovereign AI is mostly theatre. The actual technical question is data residency.](https://tarun.bulchandanis.com/blog/sovereign-ai-theatre/)
+- [Cursor in a regulated industry: the actual policy you need](https://tarun.bulchandanis.com/blog/cursor-regulated-policy/)
+
+## Topic indexes
+
+- [All writing](https://tarun.bulchandanis.com/blog/): chronological index of every blog post (over forty pieces).
+- [AI and governance](https://tarun.bulchandanis.com/blog/ai-and-governance/): curated posts on AI governance, agent audit, MCP, sovereignty.
+- [Architecture practice](https://tarun.bulchandanis.com/blog/architecture-practice/): curated posts on EA practice, ADRs, fitness functions, governance.
+- [Case studies](https://tarun.bulchandanis.com/blog/case-studies/): in-depth technical case studies of platforms Tarun has built.
+
+## Contact
+
+- LinkedIn: https://www.linkedin.com/in/tarunbulchandani/
+- GitHub (organisation): https://github.com/Bulchandani
+- Web: https://tarun.bulchandanis.com/
+
+## Atom feed
+
+- https://tarun.bulchandanis.com/blog/feed.xml

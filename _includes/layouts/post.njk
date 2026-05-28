@@ -2,6 +2,37 @@
 layout: layouts/base.njk
 ogType: article
 ---
+{# Per-post structured data for search engines and AI assistants #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ title | escape }}",
+  "description": "{{ excerpt | escape }}",
+  "datePublished": "{{ date | isoDate }}",
+  "dateModified": "{{ date | isoDate }}",
+  "author": {
+    "@type": "Person",
+    "@id": "https://tarun.bulchandanis.com/#person",
+    "name": "{{ author or 'Tarun Bulchandani' }}",
+    "url": "https://tarun.bulchandanis.com/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "@id": "https://tarun.bulchandanis.com/#person",
+    "name": "Tarun Bulchandani"
+  },
+  "url": "https://tarun.bulchandanis.com{{ page.url }}",
+  "mainEntityOfPage": "https://tarun.bulchandanis.com{{ page.url }}"{% if image %},
+  "image": "{{ image }}"{% endif %},
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".post-lede", ".post-body p:first-of-type"]
+  }{% if source == "linkedin" and external %},
+  "isBasedOn": "{{ external }}"{% endif %}
+}
+</script>
+
 <article class="post">
   <div class="container container--narrow">
     <a class="post-back" href="/blog/">← All writing</a>

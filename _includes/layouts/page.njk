@@ -1,0 +1,13 @@
+---
+layout: layouts/base.njk
+---
+<article class="page">
+  <div class="container container--narrow">
+    {% if pageEyebrow %}<div class="page-eyebrow">{{ pageEyebrow }}</div>{% endif %}
+    <h1 class="page-title">{{ pageTitle or title }}</h1>
+    {% if pageLede %}<p class="page-lede">{{ pageLede }}</p>{% endif %}
+    <div class="page-body">
+      {{ content | safe }}
+    </div>
+  </div>
+</article>
