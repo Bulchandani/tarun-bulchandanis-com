@@ -6,6 +6,7 @@ Allow: /
 Disallow: /studio/
 Disallow: /oauth/
 Disallow: /auth
+Disallow: /_private/
 
 # Explicit allowance for AI search and training crawlers that respect robots.txt.
 # This site's content is intentionally indexable; the goal is discoverability.

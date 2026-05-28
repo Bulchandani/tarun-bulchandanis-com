@@ -18,6 +18,7 @@
   </script>
   <title>{{ title }} — Tarun Bulchandani</title>
   <meta name="description" content="{{ description or excerpt or 'Long-form writing on architecture, AI, and enterprise transformation by Tarun Bulchandani.' }}">
+  {% if noindex %}<meta name="robots" content="noindex,nofollow,noarchive">{% endif %}
   <meta name="theme-color" content="#1a1a2e">
   <meta property="og:title" content="{{ title }} — Tarun Bulchandani">
   <meta property="og:description" content="{{ description or excerpt or 'Long-form writing on architecture, AI, and enterprise transformation.' }}">
