@@ -45,8 +45,8 @@ The questions this site is best at answering:
 - [All writing](https://tarun.bulchandanis.com/blog/): chronological index of every blog post (over forty pieces).
 - [AI and governance](https://tarun.bulchandanis.com/blog/ai-and-governance/): curated posts on AI governance, agent audit, MCP, sovereignty.
 - [Architecture practice](https://tarun.bulchandanis.com/blog/architecture-practice/): curated posts on EA practice, ADRs, fitness functions, governance.
-- [AI discoverability for small businesses](https://tarun.bulchandanis.com/blog/ai-discoverability/): practical guides on AI search optimisation, GEO, llms.txt, schema.org for small business websites.
 - [Case studies](https://tarun.bulchandanis.com/blog/case-studies/): in-depth technical case studies of platforms Tarun has built.
+- [Services insights](https://tarun.bulchandanis.com/services/insights/): practitioner-grade writing on AI search optimisation, GEO, llms.txt, schema.org and AI-discoverable websites for small and mid-sized businesses.
 
 ## Services
 

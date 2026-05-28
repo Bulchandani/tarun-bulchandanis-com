@@ -226,6 +226,20 @@ Full background at [/about/](/about/). The blog at
 [/blog/](/blog/) is the running record of how I think about this
 work.
 
+## Reading
+
+The [insights collection](/services/insights/) is the
+practitioner-grade writing that sits behind this services line —
+the audit framework, the implementation roadmap, the
+vendor-by-vendor template platform assessment, the working notes
+on llms.txt, schema.org, FAQ markup and generative engine
+optimisation. Recommended starting points for prospective clients:
+
+- [An audit framework for AI search readiness](/services/insights/audit-framework-ai-search-readiness/)
+- [A 30-day implementation roadmap for AI search discoverability](/services/insights/implementation-roadmap-ai-search-discoverability/)
+- [The state of AI-driven search in 2026: an assessment for owner-managed businesses](/services/insights/state-ai-driven-search-2026/)
+- [Generative search and the small business website: a strategic perspective](/services/insights/generative-search-small-business-website/)
+
 ## How to start
 
 The right starting point for nearly everyone is a conversation.

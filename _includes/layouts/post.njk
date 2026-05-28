@@ -33,9 +33,11 @@ ogType: article
 }
 </script>
 
+{%- set _backHref = "/services/insights/" if section == "services-insights" else "/blog/" -%}
+{%- set _backLabel = "All insights" if section == "services-insights" else "All writing" -%}
 <article class="post">
   <div class="container container--narrow">
-    <a class="post-back" href="/blog/">← All writing</a>
+    <a class="post-back" href="{{ _backHref }}">← {{ _backLabel }}</a>
 
     <header class="post-header">
       <div class="post-meta">
@@ -80,7 +82,7 @@ ogType: article
       {% if external and not has_body %}
         <a class="post-external" href="{{ external }}" target="_blank" rel="noopener">View on LinkedIn ↗</a>
       {% endif %}
-      <a class="post-back" href="/blog/">← All writing</a>
+      <a class="post-back" href="{{ _backHref }}">← {{ _backLabel }}</a>
     </footer>
   </div>
 </article>

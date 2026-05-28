@@ -23,6 +23,15 @@ module.exports = function(eleventyConfig) {
       .sort((a, b) => b.date - a.date);
   });
 
+  // === Services insights collection (newest first) ===
+  // Separate channel for productised-services content. Not mixed into the
+  // main blog stream; surfaced via /services/insights/.
+  eleventyConfig.addCollection("insights", function(api) {
+    return api.getFilteredByGlob("services/insights/posts/*.md")
+      .filter(p => !p.data.draft)
+      .sort((a, b) => b.date - a.date);
+  });
+
   // === Filters ===
   eleventyConfig.addFilter("readableDate", (d) => {
     return new Date(d).toLocaleDateString("en-GB", {

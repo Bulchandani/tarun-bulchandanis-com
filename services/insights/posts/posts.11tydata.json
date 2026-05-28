@@ -1,0 +1,6 @@
+{
+  "layout": "layouts/post.njk",
+  "permalink": "/services/insights/{{ page.fileSlug }}/",
+  "tags": ["insights"],
+  "section": "services-insights"
+}
